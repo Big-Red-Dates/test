@@ -1,0 +1,459 @@
+jQuery.extend({
+	
+	handleError: function( s, xhr, status, e ) 		
+	{
+		// If a local callback was specified, fire it
+		if ( s.error ) {s.error.call( s.context || s, xhr, status, e );}
+		// Fire the global callback
+		if ( s.global ) {(s.context ? jQuery(s.context) : jQuery.event).trigger( "ajaxError", [xhr, s, e] );}
+	},
+
+    createUploadDiv: function(divId)
+	{
+        var div=document.getElementById(divId);
+        if(div!=undefined)
+        {
+        	$("#"+divId).html("");
+        	return div;
+        }
+        div=$("<div>").attr("id",divId).css("display","none")[0];
+        document.body.appendChild(div);
+        return div;		
+    },
+    
+    createUploadIframe: function(divId,frameId)
+	{
+        var iframe=$("<iframe>").attr("id",frameId).attr("name",frameId)[0];
+        iframe.style.position = 'absolute';
+        iframe.style.top = '-1000px';
+        iframe.style.left = '-1000px';
+        document.getElementById(divId).appendChild(iframe);
+        return iframe;		
+    },
+ 
+    createUploadForm: function(divId,iframeId,formId, url,fileElementId, data)
+	{
+		var fileId = 'jfu-file-' + formId;
+		var form = jQuery('<form target="'+iframeId+'"  action="'+url+'" class="jUploadForm" method="POST" name="' + formId + '" id="' + formId + '" enctype="multipart/form-data"></form>');	
+		if(data)
+		{
+			for(var i in data)
+			{
+				jQuery('<input type="hidden" name="' + i + '" value="' + data[i] + '" />').appendTo(form);
+			}			
+		}	
+		var oldElement = jQuery('#' + fileElementId);
+		var newElement = jQuery(oldElement).clone();
+		jQuery(oldElement).attr('id', fileId);
+		jQuery(oldElement).before(newElement);
+		jQuery(oldElement).appendTo(form);
+
+		//set attributes
+		jQuery(form).css('display', 'none');
+		jQuery(form).css('position', 'absolute');
+		jQuery(form).css('top', '-1200px');
+		jQuery(form).css('left', '-1200px');	
+		document.getElementById(divId).appendChild(form[0]);
+		//jQuery(form).appendTo('body');		
+		return form;
+    },
+       
+    ajaxFileUpload: function(settings) 
+    {
+        var id = new Date().getTime();
+        var xml = {};
+        settings = jQuery.extend({}, jQuery.ajaxSettings, settings);  
+   		var divId="jfu-div-id";
+        var frameId = 'jfu-frame-' + id;
+        var formId = 'jfu-form-' + id;		
+        var div=jQuery.createUploadDiv(divId);
+        var iframe = jQuery.createUploadIframe(divId,frameId);
+		var form = jQuery.createUploadForm(divId,frameId,formId,settings.url, settings.fileElementId, (typeof(settings.data)=='undefined'?false:settings.data));
+        // Watch for a new set of requests
+        if ( settings.global && ! jQuery.active++ )
+		{
+			jQuery.event.trigger( "ajaxStart" );
+		}            
+        var requestDone = false;
+        if ( settings.global ) jQuery.event.trigger("ajaxSend", [xml, settings]);
+        // Wait for a response to come back
+        var uploadCallback = function(isTimeout)
+		{			
+			var iframe = document.getElementById(frameId);
+            try 
+			{				
+				if(iframe.contentWindow)
+				{
+					 xml.responseText = iframe.contentWindow.document.body?iframe.contentWindow.document.body.innerHTML:null;
+                	 xml.responseXML = iframe.contentWindow.document.XMLDocument?iframe.contentWindow.document.XMLDocument:iframe.contentWindow.document;
+				}else if(iframe.contentDocument)
+				{
+					 xml.responseText = iframe.contentDocument.document.body?iframe.contentDocument.document.body.innerHTML:null;
+                	 xml.responseXML = iframe.contentDocument.document.XMLDocument?iframe.contentDocument.document.XMLDocument:iframe.contentDocument.document;
+				}else{
+					 xml.responseText=iframe.document.body.innerHTML;
+				}
+            }catch(e)
+			{
+				jQuery.handleError(settings, xml, null, e);
+			}
+            if ( xml || isTimeout == "timeout") 
+			{				
+                requestDone = true;
+                var status;
+                try {
+                    status = isTimeout != "timeout" ? "success" : "error";
+                    // Make sure that the request was successful or notmodified
+                    if ( status != "error" )
+					{
+                        // process the data (runs the xml through httpData regardless of callback)
+                        var data = jQuery.uploadHttpData(xml, settings.dataType);    
+                        // If a local callback was specified, fire it and pass it the data
+                        if (settings.success) settings.success(data, status);
+                        // Fire the global callback
+                        if(settings.global) jQuery.event.trigger("ajaxSuccess", [xml, settings]);
+                        if (settings.complete) settings.complete(data, status);
+                        
+                    } else
+                    {
+                        jQuery.handleError(settings, xml, status);
+                    }
+                } catch(e) 
+				{
+                    status = "error";
+                    jQuery.handleError(settings, xml, status, e);
+                }
+                // The request was completed
+                if(settings.global) jQuery.event.trigger( "ajaxComplete", [xml, settings] );
+                // Handle the global AJAX counter
+                if (settings.global && ! --jQuery.active ) jQuery.event.trigger("ajaxStop");
+                
+            	if(typeof(settings.callback) == "function")
+            	{
+            		eval(settings.callback(settings.isCrossDomain?"":jQuery.parseJSON(xml.responseText)));
+            	}
+                
+                xml = null;
+            }
+        };
+        // Timeout checker
+        if (settings.timeout>0) 
+		{
+            setTimeout(function()
+            {
+                // Check to see if the request is still happening
+                if( !requestDone ) uploadCallback("timeout");
+            }, settings.timeout);
+        }
+      
+        try 
+			{
+				var form = jQuery('#' + formId);
+				jQuery(form).attr('action', settings.url);
+				jQuery(form).attr('method', 'POST');
+				jQuery(form).attr('target', frameId);
+	            if(form.encoding)
+				{
+					jQuery(form).attr('encoding', 'multipart/form-data');      			
+	            }
+	            else
+				{	
+					jQuery(form).attr('enctype', 'multipart/form-data');			
+	            }	
+	            jQuery(form).submit();
+	        } catch(e) 
+			{	
+	            jQuery.handleError(settings, xml, null, e);
+	        }
+			jQuery('#'+ frameId).load(uploadCallback);
+	        return {abort: function () {}};	
+    },
+
+    uploadHttpData: function( r, type )
+    {
+        var data = !type;
+        data = type == "xml" || data ? r.responseXML : r.responseText;
+        // If the type is "script", eval it in global context
+        if ( type == "script" ) jQuery.globalEval( data );
+        // Get the JavaScript object, if JSON is used.
+        if ( type == "json" )
+        {
+            eval( "data = " + $(data).html() );
+        }
+        // evaluate scripts within html
+        if ( type == "html" ) jQuery("<div>").html(data).evalScripts();
+        return data;
+    }
+});
+
+
+function ajaxFileUpload(id)
+{
+	var param=fuParam[id];
+	var isCrossDomain=document.location.href.indexOf(param.domain)==-1;
+	if(isCrossDomain)
+	{
+		param.url=param.url+"&callback=cn";
+	}
+
+	if(param.isPicture)
+	{
+		var extName=$("#file-"+param.id).val();
+		extName=extName.substring(extName.lastIndexOf(".")).toLowerCase();
+		if(!fsConfig.pictureSuffixSet.contains(extName))
+		{
+			alert("您选择的文件不是图片文件，图片文件扩展名包含："+fsConfig.pictureSuffix);
+			return;
+		}
+	}
+
+	$.ajaxFileUpload(
+	{
+		 id:param.id,
+         url: param.url,
+         fileElementId:"file-"+param.id,
+         dataType:'json',
+         isCrossDomain:isCrossDomain,
+         callback:function(resultBean)
+         {
+        	 if(isCrossDomain)
+        	 {
+    			$.getJSON(param.resultUrl,{},function(resultBean, status, xhRequest)
+				{
+    				uploadResultCallback(param,resultBean);
+				});	        		 
+        	 }else{
+        		uploadResultCallback(param,resultBean);
+        	 }
+         }
+     });
+		
+}
+
+function uploadResultCallback(param,resultBean)
+{
+	if(resultBean.success)
+	{
+    	$("#"+param.id).val(resultBean.data.path);
+    	if(param.callback==undefined)
+    	{
+	    	$("#close-"+param.id).removeClass("notShow");
+	    	$("#close-"+param.id).addClass("show");
+			if(param.isPicture)
+			{
+				$("#img-"+param.id).attr("src",resultBean.data.url);	
+				$("#imgDiv-"+param.id).removeClass("notShow");
+				$("#imgDiv-"+param.id).addClass("show");
+			}
+    	}else{
+    		eval(param.callback+"("+JSON.stringify(resultBean)+")");
+    	}
+	}else{
+		alert(resultBean.message);
+	}	
+}
+
+function deleteFileUpload(id,domain)
+{
+	var url=domain+"/api/delete?path="+$("#"+id).val();
+	var isCrossDomain=document.location.href.indexOf(domain)==-1;
+	if(isCrossDomain){url=url+"&callback=?";}
+	$.getJSON(url,{},function(resultBean, status, xhRequest)
+	{
+		if(resultBean.success)
+		{
+			$("#"+id).val("");
+			$("#img-"+id).attr("src","");	
+			$("#imgDiv-"+id).removeClass("show");
+			$("#imgDiv-"+id).addClass("notShow");
+			$("#close-"+id).removeClass("show");
+			$("#close-"+id).addClass("notShow");
+		}
+	});		
+}
+
+var fuParam=new Object();
+var fsConfig="";
+function xytFileUpload(param)
+{
+	if(param.domainId!=undefined && param.domainId!="")
+	{
+		if(fsConfig==undefined || fsConfig=="")
+		{
+	    	var domain=getFsDomain();
+	    	var isCrossDomain=document.location.href.indexOf(domain)==-1;
+	    	var fcUrl=domain+"/api/getFsConfig";
+	    	if(isCrossDomain)
+	    	{
+	    		fcUrl+="?callback=?";
+	    	}
+	    	$.getJSON(fcUrl,{},function(resultBean, status, xhRequest)
+	    	{
+	    		if(resultBean.success)
+	    		{
+	    			fsConfig=resultBean.data;
+	    			param.domain=fsConfig.idUrlMap[param.domainId];
+	    		}
+	    	});	  
+		}else{
+			param.domain=fsConfig.idUrlMap[param.domainId];
+		}
+	}
+	param.merchantId=param.merchantId==undefined?"":param.merchantId;
+	param.suffixDir=param.suffixDir==undefined?"":param.suffixDir;
+	param.isPicture=param.isPicture==undefined?true:param.isPicture;
+	var url=param.domain+"/api/upload";
+	var resultUrl=param.domain+"/api/getUploadResult?callback=?";
+	param.resultUrl=resultUrl;
+	var id=param.target.id;
+	if(id==undefined || id=="")
+	{
+		id=new Date().getTime();
+		param.target.id=id;
+	}
+	param.id=id;
+	if($("#"+id).attr("isInited")==undefined || $("#"+id).attr("isInited")==null || $("#"+id).attr("isInited")=="")
+	{
+		var dlUrl=url.substring(0,url.lastIndexOf("/")+1)+"download?path=";
+		url+="?merchantId="+param.merchantId;
+		url+="&suffixDir="+param.suffixDir;
+		url+="&isPicture="+param.isPicture;
+		//url+="&"+window.top.getLoginUser().token;
+		param.url=url;
+		$("#"+id).after("<div id='div-"+id+"' class='fileUploadDiv'></div>");
+		$("#"+id).appendTo("#div-"+id);
+		var html="<button id='close-"+id+"' onclick=\"deleteFileUpload('"+id+"','"+param.domain+"')\"";
+		html+=" class='"+($("#"+id).val()!=""?"show":"notShow")+"'";
+		html+=">X</button>";
+		html+="<input type='file' id='file-"+id+"' name='files[]' class='xytFileUpload-file' onchange=\"ajaxFileUpload('"+id+"')\"/>";
+		html+="<div id='imgDiv-"+id+"' class='fileUplaodImgDiv";
+		html+=$("#"+id).val()!=""?" show":" notShow";
+		html+="'><img id='img-"+id+"' height='100%' old_height='' old_wight='' class='fileUploadImg' ";
+		if($("#"+id).val()!="")
+		{
+			html+="src='"+(dlUrl+$("#"+id).val())+"'";
+		}
+		html+="/>";
+		html+="</div>";
+		html+="<div class='fileclear'></div>";
+		$("#div-"+id).append(html);		
+		
+        $('#img-'+id).hover(function () {
+            var $this = $(this);
+            var $but = $(".close_but");
+            var _h = $this.height();
+            var _w = $this.width();
+            $this.attr("old_height", _h).attr("old_wight", _w);
+            $but.addClass("showBut");
+            $this.width(_w * 5);
+            $this.height(_h * 5);
+        }, function () {
+            var $this = $(this);
+            var $but = $(".close_but");
+            $but.removeClass("showBut");
+            $this.unbind("hover");
+            var _o_w = $this.attr("old_wight");
+            var _o_h = $this.attr("old_height");
+            $this.width(_o_w);
+            $this.height(_o_h);
+        })
+        
+        if(param.callback!=undefined)
+    	{
+			$("#imgDiv-"+id).removeClass("show");
+			$("#imgDiv-"+id).addClass("notShow");   	
+    	}
+        
+        $("#"+id).attr("isInited",true);
+        fuParam[id]=param;
+	}
+}
+
+function initXytFileUpload()
+{
+	$(".xytFileUpload").each(function(i,e)
+	{
+		var p=$(this).attr("param");
+		if(p!=null)
+		{
+			eval("xytFileUpload("+p+")");
+		}
+	});
+}
+
+$(function () 
+{
+	$.ajaxSetup ({cache: false});
+    if(fsConfig=="")
+	{
+    	var domain=getFsDomain();
+    	var isCrossDomain=document.location.href.indexOf(domain)==-1;
+    	var fcUrl=domain+"/api/getFsConfig";
+    	if(isCrossDomain)
+    	{
+    		fcUrl+="?callback=?";
+    	}
+    	$.getJSON(fcUrl,{},function(resultBean, status, xhRequest)
+    	{
+    		if(resultBean.success)
+    		{
+    			fsConfig=resultBean.data;
+    			initXytFileUpload();
+    		}
+    	});	    	
+	}else{
+		initXytFileUpload();
+	}	
+});
+
+Array.prototype.remove = function(index)
+{
+	if(isNaN(index)||(index>=this.length)||(index<0)) return false;
+	this.splice(index,1);
+	return true;
+}
+Array.prototype.del=function(n){if(n<0){return this;}else{return this.slice(0,n).concat(this.slice(n+1,this.length));}}
+Array.prototype.indexOf = function(value)
+{
+	for(var i=0;i<this.length;i++)
+	{
+		if(typeof(value)=="function")
+		{
+			if(value.equals(this[i])) return i;
+		}else if(value==this[i]){ 
+			return i;
+		}
+	}
+	return -1;
+}
+Array.prototype.contains = function(value){return this.indexOf(value)>=0;}
+Array.prototype.clear = function(){while(this.length>0) this.remove(this.length-1);}
+Array.prototype.add = function(index,value)
+{
+	if(value==undefined)
+	{ 
+		this.put(index);
+	}else{
+		var len = this.length;
+		this.push(this[len-1]);
+		for(var i=len-1;i>index;i--) {this[i] = this[i-1];}
+		this[index] = value;
+	}
+}
+Array.prototype.put = function(value)
+{
+	if(!this.contains(value)) this.push(value);
+}
+Array.prototype.circle = function(degressive)
+{
+	if(degressive)
+	{
+	  	var a = this[0];
+	  	for(var i=0;i<this.length-1;i++){ this[i] = this[i+1];}
+	  	this[this.length-1] = a;
+	}else{
+	  	var a = this[this.length-1];
+	  	for(var i=this.length-1;i>0;i--){ this[i] = this[i-1];}
+	  	this[0] = a;
+	}
+}

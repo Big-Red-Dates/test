@@ -1,0 +1,124 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.msy</groupId>
+  <artifactId>msy</artifactId>
+  <version>0.0.1</version>
+  <packaging>pom</packaging>
+
+  <name>msy</name>
+  <url>http://maven.apache.org</url>
+
+   <modules>
+		<module>msy-api</module>
+		<module>msy-common</module>
+		<module>msy-dao</module>
+		<module>msy-service</module>
+		<module>msy-web</module>
+	</modules>
+	
+	<properties>
+	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    	<maven.compiler.source>1.7</maven.compiler.source>
+      	<maven.compiler.target>1.7</maven.compiler.target>
+    	<!-- <spring.platform.version>2.0.8.RELEASE</spring.platform.version> -->
+    	<spring.platform.version>Athens-SR3</spring.platform.version>
+        <quartz.version>2.2.3</quartz.version>
+        <dubbo.version>2.5.4</dubbo.version>
+        <ehcache.version>2.5.2</ehcache.version>
+        <!-- <mybatis.spring.version>1.3.1</mybatis.spring.version> -->
+        <mybatis.version>3.4.2</mybatis.version>
+        <druid.version>1.0.15</druid.version>
+        <ojdbc14.version>10.2.0.4.0</ojdbc14.version>
+        <mybatis.mapper.version>3.2.2</mybatis.mapper.version>
+        <pagehelper.version>5.0.1</pagehelper.version>
+        <persistence.api.version>1.0</persistence.api.version>
+        <fastjson.version>1.2.31</fastjson.version>
+        <mybatis.starter.version>1.2.0</mybatis.starter.version>
+		<camel.version>2.17.7</camel.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.spring.platform</groupId>
+                <artifactId>platform-bom</artifactId>
+                <version>${spring.platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+			<dependency>
+				<groupId>org.apache.camel</groupId>
+				<artifactId>camel-spring-boot-starter</artifactId>
+				<version>${camel.version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.apache.camel</groupId>
+			    <artifactId>camel-ftp</artifactId>
+			    <version>${camel.version}</version>
+			</dependency>
+           <!--  <dependency>
+                <groupId>org.quartz-scheduler</groupId>
+                <artifactId>quartz-jobs</artifactId>
+                <version>${quartz.version}</version>
+            </dependency> -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>dubbo</artifactId>
+                <version>${dubbo.version}</version>
+            </dependency>
+            <dependency>
+				<groupId>net.sf.ehcache</groupId>
+				<artifactId>ehcache-core</artifactId>
+				<version>${ehcache.version}</version>
+			</dependency>
+			<!-- <dependency>
+				<groupId>org.mybatis</groupId>
+				<artifactId>mybatis</artifactId>
+				<version>${mybatis.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mybatis</groupId>
+				<artifactId>mybatis-spring</artifactId>
+				<version>${mybatis.spring.version}</version>
+			</dependency> -->
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>druid</artifactId>
+				<version>${druid.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.oracle</groupId>
+				<artifactId>ojdbc14</artifactId>
+				<version>${ojdbc14.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mybatis.spring.boot</groupId>
+				<artifactId>mybatis-spring-boot-starter</artifactId>
+				<version>${mybatis.starter.version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>tk.mybatis</groupId>
+			    <artifactId>mapper</artifactId>
+			    <version>${mybatis.mapper.version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>com.github.pagehelper</groupId>
+			    <artifactId>pagehelper</artifactId>
+			    <version>${pagehelper.version}</version>
+			</dependency>
+			<!-- <dependency>
+			    <groupId>javax.persistence</groupId>
+			    <artifactId>persistence-api</artifactId>
+			    <version>${persistence.api.version}</version>
+			</dependency> -->
+			<dependency>
+			    <groupId>com.alibaba</groupId>
+			    <artifactId>fastjson</artifactId>
+			    <version>${fastjson.version}</version>
+			</dependency>
+        </dependencies>
+    </dependencyManagement>
+  
+</project>

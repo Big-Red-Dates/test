@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.msy.mapper.AgentMapper">
+  <resultMap id="BaseResultMap" type="com.msy.model.Agent">
+    <id column="agent_id" jdbcType="VARCHAR" property="agentId" />
+    <result column="agent_bins_id" jdbcType="INTEGER" property="agentBinsId" />
+    <result column="agent_name" jdbcType="VARCHAR" property="agentName" />
+    <result column="agent_area_prov" jdbcType="VARCHAR" property="agentAreaProv" />
+    <result column="agent_area_city" jdbcType="VARCHAR" property="agentAreaCity" />
+    <result column="manager_name" jdbcType="VARCHAR" property="managerName" />
+    <result column="manager_phone" jdbcType="VARCHAR" property="managerPhone" />
+    <result column="agent_rate" jdbcType="DOUBLE" property="agentRate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    agent_id, agent_bins_id, agent_name, agent_area_prov, agent_area_city, manager_name, 
+    manager_phone, agent_rate
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_agent
+    where agent_id = #{agentId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_agent
+    where agent_id = #{agentId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.msy.model.Agent">
+    insert into t_agent (agent_id, agent_bins_id, agent_name, 
+      agent_area_prov, agent_area_city, manager_name, 
+      manager_phone, agent_rate)
+    values (#{agentId,jdbcType=VARCHAR}, #{agentBinsId,jdbcType=INTEGER}, #{agentName,jdbcType=VARCHAR}, 
+      #{agentAreaProv,jdbcType=VARCHAR}, #{agentAreaCity,jdbcType=VARCHAR}, #{managerName,jdbcType=VARCHAR}, 
+      #{managerPhone,jdbcType=VARCHAR}, #{agentRate,jdbcType=DOUBLE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.msy.model.Agent">
+    insert into t_agent
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="agentId != null">
+        agent_id,
+      </if>
+      <if test="agentBinsId != null">
+        agent_bins_id,
+      </if>
+      <if test="agentName != null">
+        agent_name,
+      </if>
+      <if test="agentAreaProv != null">
+        agent_area_prov,
+      </if>
+      <if test="agentAreaCity != null">
+        agent_area_city,
+      </if>
+      <if test="managerName != null">
+        manager_name,
+      </if>
+      <if test="managerPhone != null">
+        manager_phone,
+      </if>
+      <if test="agentRate != null">
+        agent_rate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="agentId != null">
+        #{agentId,jdbcType=VARCHAR},
+      </if>
+      <if test="agentBinsId != null">
+        #{agentBinsId,jdbcType=INTEGER},
+      </if>
+      <if test="agentName != null">
+        #{agentName,jdbcType=VARCHAR},
+      </if>
+      <if test="agentAreaProv != null">
+        #{agentAreaProv,jdbcType=VARCHAR},
+      </if>
+      <if test="agentAreaCity != null">
+        #{agentAreaCity,jdbcType=VARCHAR},
+      </if>
+      <if test="managerName != null">
+        #{managerName,jdbcType=VARCHAR},
+      </if>
+      <if test="managerPhone != null">
+        #{managerPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="agentRate != null">
+        #{agentRate,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.msy.model.Agent">
+    update t_agent
+    <set>
+      <if test="agentBinsId != null">
+        agent_bins_id = #{agentBinsId,jdbcType=INTEGER},
+      </if>
+      <if test="agentName != null">
+        agent_name = #{agentName,jdbcType=VARCHAR},
+      </if>
+      <if test="agentAreaProv != null">
+        agent_area_prov = #{agentAreaProv,jdbcType=VARCHAR},
+      </if>
+      <if test="agentAreaCity != null">
+        agent_area_city = #{agentAreaCity,jdbcType=VARCHAR},
+      </if>
+      <if test="managerName != null">
+        manager_name = #{managerName,jdbcType=VARCHAR},
+      </if>
+      <if test="managerPhone != null">
+        manager_phone = #{managerPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="agentRate != null">
+        agent_rate = #{agentRate,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where agent_id = #{agentId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.msy.model.Agent">
+    update t_agent
+    set agent_bins_id = #{agentBinsId,jdbcType=INTEGER},
+      agent_name = #{agentName,jdbcType=VARCHAR},
+      agent_area_prov = #{agentAreaProv,jdbcType=VARCHAR},
+      agent_area_city = #{agentAreaCity,jdbcType=VARCHAR},
+      manager_name = #{managerName,jdbcType=VARCHAR},
+      manager_phone = #{managerPhone,jdbcType=VARCHAR},
+      agent_rate = #{agentRate,jdbcType=DOUBLE}
+    where agent_id = #{agentId,jdbcType=VARCHAR}
+  </update>
+</mapper>

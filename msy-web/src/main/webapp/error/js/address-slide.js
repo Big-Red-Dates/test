@@ -1,0 +1,15 @@
+$(".didian").mouseenter(
+    function(){
+    	$(".address-guodu").show();
+    }
+);
+$(".didian").mouseleave(
+    function(){
+    	$(".address-guodu").hide();
+    }
+);
+$(".city-row-bd-list").click(
+	function(){
+		$(this).parents(".address-guodu").hide();
+	}
+);

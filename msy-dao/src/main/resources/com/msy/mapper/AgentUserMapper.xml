@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.msy.mapper.AgentUserMapper">
+  <resultMap id="BaseResultMap" type="com.msy.model.AgentUser">
+    <id column="agent_user_id" jdbcType="VARCHAR" property="agentUserId" />
+    <result column="agent_user_name" jdbcType="VARCHAR" property="agentUserName" />
+    <result column="agent_type" jdbcType="VARCHAR" property="agentType" />
+    <result column="agent_id" jdbcType="VARCHAR" property="agentId" />
+  </resultMap>
+  
+  <resultMap id="OrderBaseResultMap" type="com.msy.model.Order">
+    <id column="order_id" jdbcType="VARCHAR" property="orderId" />
+    <result column="all_price" jdbcType="DECIMAL" property="allPrice" />
+    <result column="pay_price" jdbcType="DECIMAL" property="payPrice" />
+    <result column="pay_time" jdbcType="TIMESTAMP" property="payTime" />
+    <result column="pay_type" jdbcType="TINYINT" property="payType" />
+    <result column="pay_status" jdbcType="TINYINT" property="payStatus" />
+    <result column="business_status" jdbcType="TINYINT" property="businessStatus" />
+    <result column="projector_id" jdbcType="VARCHAR" property="projectorId" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
+    <result column="house_id" jdbcType="VARCHAR" property="houseId" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="notify_time" jdbcType="TIMESTAMP" property="notifyTime" />
+    <result column="rowflag" jdbcType="INTEGER" property="rowflag" />
+    <result column="resp_code" jdbcType="VARCHAR" property="respCode" />
+    <result column="resp_desc" jdbcType="VARCHAR" property="respDesc" />
+  </resultMap>
+  <resultMap id="OrderVoBaseResultMap" type="com.msy.model.OrderVo">
+    <id column="order_id" jdbcType="VARCHAR" property="orderId" />
+    <result column="all_price" jdbcType="DECIMAL" property="allPrice" />
+    <result column="room_id" jdbcType="VARCHAR" property="roomId" />
+    <result column="room_name" jdbcType="VARCHAR" property="roomName" />
+    <result column="total" jdbcType="INTEGER" property="total" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    agent_user_id, agent_user_name, agent_type, agent_id
+  </sql>
+  <sql id="Base_Column_List_order"> 
+    order_id, all_price, pay_price, pay_time, pay_type, pay_status, business_status, 
+    projector_id, created_time, updated_time, house_id, user_id
+  </sql>
+
+	<select id="selectAllByAgentId" parameterType="java.lang.String"
+		resultMap="OrderBaseResultMap">
+	SELECT
+	<include refid="Base_Column_List_order" />
+	from t_order o LEFT JOIN (
+	SELECT r.room_id from t_entity_room r where EXISTS (
+
+	SELECT 1 from t_entity t where agent_id = '1' and r.entity_id = t.entity_id and t.agent_id = #{agentId,jdbcType=VARCHAR}
+
+	)) rr on o.house_id = rr.room_id 
+	</select>
+  
+  <!-- 查询条件 -->
+	<sql id="searchWhere">
+			<if test="entity.entityName != null and entity.entityName != ''">
+				AND rr.room_name LIKE CONCAT('%',#{entity.entityName},'%')
+			</if>
+			<if test="entity.startDt != null ">
+				AND o.created_time <![CDATA[ >= ]]> #{entity.startDt}
+			</if>
+			<if test="entity.endDt != null ">
+				AND o.created_time <![CDATA[ <= ]]> #{entity.endDt}
+			</if>
+	</sql>
+
+	<!-- 查询分页条数 -->
+	<select id="search" parameterType="pagerEntity" resultMap="OrderVoBaseResultMap">
+
+		SELECT rr.room_id,rr.room_name,count(1) as total,sum(o.all_price) as all_price from t_order
+		o
+		LEFT JOIN (
+		SELECT r.room_id,r.room_name from t_entity_room r where EXISTS (
+
+		SELECT 1 from t_entity t where 1=1 
+		<if test="entity.agentId != null and entity.agentId != ''">
+				AND agent_id = #{entity.agentId}
+		</if>
+		and r.entity_id = t.entity_id
+
+		)) rr on o.house_id = rr.room_id WHERE o.pay_status = '1'
+
+		<include refid="searchWhere" />
+		GROUP BY rr.room_id
+        limit #{offset}, #{pageSize}
+	</select>
+
+	<!-- 查询分页条数 -->
+	<select id="count" parameterType="pagerEntity" resultType="long">
+		SELECT count(*) from (
+		SELECT count(*) from t_order o
+		LEFT JOIN (
+		SELECT r.room_id,r.room_name from t_entity_room r where EXISTS (
+
+		SELECT 1 from t_entity t where 1=1
+		<if test="entity.agentId != null and entity.agentId != ''">
+				AND agent_id = #{entity.agentId}
+		</if> 
+		and r.entity_id = t.entity_id
+
+		)) rr on o.house_id = rr.room_id WHERE o.pay_status = '1'
+
+		<include refid="searchWhere" />
+		GROUP BY rr.room_id
+		) rrr
+	</select>
+	
+ <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_agent_user
+    where agent_user_id = #{agentUserId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_agent_user
+    where agent_user_id = #{agentUserId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.msy.model.AgentUser">
+    insert into t_agent_user (agent_user_id, agent_user_name, agent_type, 
+      agent_id)
+    values (#{agentUserId,jdbcType=VARCHAR}, #{agentUserName,jdbcType=VARCHAR}, #{agentType,jdbcType=VARCHAR}, 
+      #{agentId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.msy.model.AgentUser">
+    insert into t_agent_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="agentUserId != null">
+        agent_user_id,
+      </if>
+      <if test="agentUserName != null">
+        agent_user_name,
+      </if>
+      <if test="agentType != null">
+        agent_type,
+      </if>
+      <if test="agentId != null">
+        agent_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="agentUserId != null">
+        #{agentUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="agentUserName != null">
+        #{agentUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="agentType != null">
+        #{agentType,jdbcType=VARCHAR},
+      </if>
+      <if test="agentId != null">
+        #{agentId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.msy.model.AgentUser">
+    update t_agent_user
+    <set>
+      <if test="agentUserName != null">
+        agent_user_name = #{agentUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="agentType != null">
+        agent_type = #{agentType,jdbcType=VARCHAR},
+      </if>
+      <if test="agentId != null">
+        agent_id = #{agentId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where agent_user_id = #{agentUserId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.msy.model.AgentUser">
+    update t_agent_user
+    set agent_user_name = #{agentUserName,jdbcType=VARCHAR},
+      agent_type = #{agentType,jdbcType=VARCHAR},
+      agent_id = #{agentId,jdbcType=VARCHAR}
+    where agent_user_id = #{agentUserId,jdbcType=VARCHAR}
+  </update>
+  
+  
+</mapper>

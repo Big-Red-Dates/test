@@ -1,0 +1,52 @@
+/* index-user.css  autor:wuxinqiang; */
+
+body,input,select,ul{padding:0;margin:0;}
+li{list-style:none}
+a{text-decoration:none;}
+.clear{clear:both;}
+
+.main-big{background:#fff;padding: 2px 5px 2px 5px;}
+  .main-b-box{min-width:820px;}
+    .main-b-contentbox{width:100%;}
+      .contentbox-title-nav{border-bottom:1px solid #d2d2d2;}
+        .navigations{height:38px;line-height:38px;}
+        .navigations li{display:inline-block;padding-left:8px;font-family:'宋体';font-weight:bold;}
+        .navigations a{font-size:0.75em;color:#000;}
+        .navigations span{font-size:0.75em;color:#000;}
+      .contentbox-body{}
+
+.fn-left{float:left;}
+.fn-right{float:right;}
+
+.fn-clear{clear:both;}
+.fn-pos-relative{position:relative;}
+.fn-pos-absolute{position:absolute;}
+
+.asterisk{color:red;}
+
+.form-col-4{width:10%;}
+.form-col-8{width:89%;}
+
+
+.form-horizontal .form-group{
+  margin:16px 0px 20px 0px;
+}
+.form-horizontal .control-label {
+  text-align:right;
+  line-height:34px;
+}
+
+.form-control {
+  display:block;
+  width:100%;
+  height:34px;
+  font-size:0.875em;
+  line-height:34px;
+  color:#555;
+  background-color:#fff;
+  border:1px solid #ccc;
+  border-radius:4px;
+}
+
+
+

@@ -1,0 +1,132 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title></title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<link href="../resources/style/page.form.css" rel="stylesheet" />
+<link href="../resources/style/jqueryValidate/jquery.validate.css"
+	rel="stylesheet" />
+<script src="../resources/js-plug/jquery.validate/jquery.validate.js"></script>
+<script
+	src="../resources/js-plug/jquery.validate/jquery.validate.method.js"></script>
+<script src="../resources/js-plug/My97DatePicker/WdatePicker.js"></script>
+<script src="../resources/js-plug/md5.js"></script>
+<!-- 树型选择器样式 -->
+<link href="../resources/xyt-select/style.css" rel="stylesheet" />
+<!-- 树型选择器 -->
+<script src="../resources/js-plug/jquery.jstree.js"></script>
+<script src="../resources/xyt-select/select.js"></script>
+<style type="text/css">
+.txt {
+	width: 161px;
+}
+
+.selectDiv ul {
+	width: 178px;
+}
+
+.orgOnly {
+	display: none;
+}
+
+label.orgError {
+	color: #FF0000;
+	font-size: 12px;
+	font-weight: bold;
+	margin-left: 10px;
+	padding-bottom: 2px;
+}
+</style>
+
+</head>
+<body>
+	<div class="middle-main">
+		<div class="msg"></div>
+		<div class="listtab">
+			<form id="updatehotalFROM" method="post">
+				<input id="codeM" name="code" type="hidden" value=""/>
+				<div class="form-blog">
+					<div>
+						<div class="row">
+							<label class="labeltext xing">酒店名称：</label> <input type="text"
+								name="hotalname" maxlength="20" id="hotalname" 
+								class="middleinput" />
+						</div>
+						<div class="row">
+							<label class="labeltext xing">酒店类型：</label>
+							酒店<input type="radio" name="hotaltype"  value="1"/>  
+                                                                      会所<input type="radio" name="hotaltype"  value="2"/>  
+						</div>
+						<div class="row">
+							<label class="labeltext xing">所在城市：</label> <input type="text"
+								name="cityname" maxlength="20" id="cityname" class="middleinput">
+						</div>
+						<div class="row">
+							<label class="labeltext xing">所在省份：</label> <input type="text"
+								name="province" maxlength="20" id="province" class="middleinput">
+						</div>
+					</div>
+					<div class="form-save">
+						<span class="but">
+							<button type="button" id="saveButton">
+								<div class="but-left"></div>
+								<div class="but-center">修改</div>
+								<div class="but-right"></div>
+							</button>
+						</span> <span class="but">
+							<button type="button" class="but-close">
+								<div class="but-left"></div>
+								<div class="but-center">取消</div>
+								<div class="but-right"></div>
+							</button>
+						</span>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(
+				function() {
+					$("#saveButton").click(function(){
+						updateEntityLog();
+				    });
+					var entitystr = null;
+					showEntity();
+						function showEntity(){
+							var entityId = localStorage.getItem("entityId");
+							console.log(""+entityId);
+							$.post(getContextPath() + "/entity/searchbyid", {id:entityId}, function(
+									resultBean, status, request) {
+								//topLoaded();
+								if (resultBean.resultCode=="0000") {
+									$("#hotalname").val(resultBean.resultData.entityName);								
+	  							    $("input:radio[name='hotaltype'][value='"+resultBean.resultData.entityType+"']").attr("checked",true);
+	  							    $("#cityname").val(resultBean.resultData.city);
+	  							    $("#province").val(resultBean.resultData.province);
+	  							    $("#codeM").val(entityId);
+									}else{
+									alert(resultBean.resultMsg);
+									}
+							}, 'json');
+						}
+						
+						function updateEntityLog(){
+							$.post(getContextPath() + "/entity/updatehotal",$(
+							"#updatehotalFROM").serialize(), function(
+							resultBean, status, request) {
+						//topLoaded();
+						if (resultBean.resultCode=="0000") {
+							alert(resultBean.resultMsg);
+							}else{
+							alert(resultBean.resultMsg);
+							}
+					}, 'json');
+						}
+					/* $("#addhotalFROM").validate(validateConfige); */
+				});
+	</script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.msy.mapper.OperatorMapper">
+  <resultMap id="BaseResultMap" type="com.msy.model.Operator">
+    <id column="operator_id" jdbcType="VARCHAR" property="operatorId" />
+    <result column="operator_login_name" jdbcType="VARCHAR" property="operatorLoginName" />
+    <result column="operator_login_password" jdbcType="VARCHAR" property="operatorLoginPassword" />
+    <result column="operator_login_nick" jdbcType="VARCHAR" property="operatorLoginNick" />
+    <result column="user_type" jdbcType="VARCHAR" property="userType" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    operator_id, operator_login_name, operator_login_password, operator_login_nick,user_type
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_operator
+    where operator_id = #{operatorId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_operator
+    where operator_login_name = #{operatorLoginName,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByNameAndType" parameterType="com.msy.model.Operator" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_operator
+    where operator_login_name = #{operatorLoginName,jdbcType=VARCHAR} AND user_type = #{userType,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_operator
+    where operator_id = #{operatorId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.msy.model.Operator">
+    insert into t_operator (operator_id, operator_login_name, operator_login_password, 
+      operator_login_nick, user_type)
+    values (#{operatorId,jdbcType=VARCHAR}, #{operatorLoginName,jdbcType=VARCHAR}, #{operatorLoginPassword,jdbcType=VARCHAR}, 
+      #{operatorLoginNick,jdbcType=VARCHAR}, #{userType,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.msy.model.Operator">
+    insert into t_operator
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="operatorId != null">
+        operator_id,
+      </if>
+      <if test="operatorLoginName != null">
+        operator_login_name,
+      </if>
+      <if test="operatorLoginPassword != null">
+        operator_login_password,
+      </if>
+      <if test="operatorLoginNick != null">
+        operator_login_nick,
+      </if>
+      <if test="userType != null">
+        user_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="operatorId != null">
+        #{operatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorLoginName != null">
+        #{operatorLoginName,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorLoginPassword != null">
+        #{operatorLoginPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorLoginNick != null">
+        #{operatorLoginNick,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null">
+        #{userType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.msy.model.Operator">
+    update t_operator
+    <set>
+      <if test="operatorLoginName != null">
+        operator_login_name = #{operatorLoginName,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorLoginPassword != null">
+        operator_login_password = #{operatorLoginPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorLoginNick != null">
+        operator_login_nick = #{operatorLoginNick,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null">
+        user_type = #{userType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where operator_id = #{operatorId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.msy.model.Operator">
+    update t_operator
+    set operator_login_name = #{operatorLoginName,jdbcType=VARCHAR},
+      operator_login_password = #{operatorLoginPassword,jdbcType=VARCHAR},
+      operator_login_nick = #{operatorLoginNick,jdbcType=VARCHAR},
+      user_type = #{userType,jdbcType=VARCHAR}
+    where operator_id = #{operatorId,jdbcType=VARCHAR}
+  </update>
+</mapper>

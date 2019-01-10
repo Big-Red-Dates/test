@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.msy.mapper.MovieMapper">
+  <resultMap id="BaseResultMap" type="com.msy.model.Movie">
+    <id column="movie_id" jdbcType="VARCHAR" property="movieId" />
+    <result column="read_id" jdbcType="INTEGER" property="readId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="director" jdbcType="VARCHAR" property="director" />
+    <result column="starring" jdbcType="VARCHAR" property="starring" />
+    <result column="category_id" jdbcType="VARCHAR" property="categoryId" />
+    <result column="country" jdbcType="VARCHAR" property="country" />
+    <result column="language" jdbcType="VARCHAR" property="language" />
+    <result column="release_date" jdbcType="VARCHAR" property="releaseDate" />
+    <result column="film_length" jdbcType="INTEGER" property="filmLength" />
+    <result column="douban_rate" jdbcType="REAL" property="doubanRate" />
+    <result column="file" jdbcType="VARCHAR" property="file" />
+    <result column="img" jdbcType="VARCHAR" property="img" />
+  </resultMap>
+ 
+  <resultMap id="MovieDetailMap" type="com.msy.model.Movie">
+    <id column="movie_id" jdbcType="VARCHAR" property="movieId" />
+    <result column="read_id" jdbcType="INTEGER" property="readId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="director" jdbcType="VARCHAR" property="director" />
+    <result column="starring" jdbcType="VARCHAR" property="starring" />
+    <result column="category_id" jdbcType="VARCHAR" property="categoryId" />
+    <result column="country" jdbcType="VARCHAR" property="country" />
+    <result column="language" jdbcType="VARCHAR" property="language" />
+    <result column="release_date" jdbcType="TIMESTAMP" property="releaseDate" />
+    <result column="film_length" jdbcType="INTEGER" property="filmLength" />
+    <result column="douban_rate" jdbcType="REAL" property="doubanRate" />
+    <result column="movie_introdu" jdbcType="LONGVARCHAR" property="movieIntrodu" />
+    <association property="category" column="category_id"
+			javaType="com.msy.model.Category" select="com.msy.mapper.CategoryMapper.selectByPrimaryKey">
+		</association>
+  </resultMap>
+  
+  <resultMap type="com.msy.modol.copy.MovieCopy" id="MovieCopyResultMap">
+	<id column="movie_id" jdbcType="VARCHAR" property="movieId" />
+    <result column="read_id" jdbcType="INTEGER" property="readId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="category_id" jdbcType="VARCHAR" property="categoryId" />
+    <result column="release_date" jdbcType="VARCHAR" property="releaseDate" />
+    <result column="douban_rate" jdbcType="REAL" property="doubanRate" />
+     <result column="movie_introdu" jdbcType="LONGVARCHAR" property="movieIntrodu" />
+		<association property="category" column="category_id"
+			javaType="com.msy.model.Category" select="com.msy.mapper.CategoryMapper.selectByPrimaryKey">
+		</association>
+	</resultMap>
+  
+  <sql id="Base_Column_List">
+    movie_id,read_id, name, director, starring, category_id, country, language, release_date, 
+    film_length, douban_rate, file, img
+  </sql>
+  
+ <sql id="A_Base_Column_List">
+    movie_id, read_id, name, director, starring, category_id, country, 
+    language, release_date, film_length, douban_rate, movie_introdu
+ </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_movie
+    where movie_id = #{movieId,jdbcType=VARCHAR} 
+  </select>
+  
+  <select id="selectBymovieId" parameterType="java.lang.String" resultMap="MovieDetailMap">
+    select 
+    <include refid="A_Base_Column_List" />
+    from t_movie
+    where movie_id = #{movieId,jdbcType=VARCHAR} 
+  </select>
+  
+ <select id="selectListBymovieId" parameterType="com.msy.modol.copy.MovieCopy" resultMap="MovieCopyResultMap">
+    select 
+    <include refid="A_Base_Column_List" />
+    from t_movie
+    where category_id = #{categoryId,jdbcType=VARCHAR} and movie_id != #{movieId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectList" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_movie 
+  </select>
+ 
+  <select id="countall" resultType="java.lang.Integer">
+    select 
+    count(*)
+    from t_movie
+  </select>
+ 
+   <select id="countBycateid" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select 
+    count(*)
+    from t_movie
+    <where>
+    <if test="_parameter != '-1'">
+     category_id = #{_parameter,jdbcType=VARCHAR}
+    </if>
+    </where>
+  </select>
+  
+  <select id="searchallforpage" parameterType="com.msy.utils.PagerEntity" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_movie
+    limit #{offset}, #{pageSize}
+  </select>
+  
+  <select id="searchBycateid" parameterType="com.msy.utils.PagerEntity" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_movie
+    <where>
+    <if test="entity.categoryId != '-1'">
+     category_id = #{entity.categoryId,jdbcType=VARCHAR}
+    </if>
+    </where>
+    limit #{offset}, #{pageSize}
+  </select>
+  
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_movie
+    where movie_id = #{movieId,jdbcType=VARCHAR}
+  </delete>
+ 
+  <insert id="insert" parameterType="com.msy.model.Movie">
+    insert into t_movie (movie_id, name, director, 
+      starring, category_id, country, 
+      language, movie_introdu,release_date, film_length, 
+      douban_rate, file, img)
+    values (#{movieId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{director,jdbcType=VARCHAR}, 
+      #{starring,jdbcType=VARCHAR}, #{categoryId,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, 
+      #{language,jdbcType=VARCHAR},  #{movieIntrodu,jdbcType=LONGVARCHAR},#{releaseDate,jdbcType=TIMESTAMP}, #{filmLength,jdbcType=INTEGER}, 
+      #{doubanRate,jdbcType=REAL}, #{file,jdbcType=VARCHAR}, #{img,jdbcType=VARCHAR})
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterType="com.msy.model.Movie">
+    update t_movie
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="director != null">
+       director = #{director,jdbcType=VARCHAR},
+      </if>
+      <if test="starring != null">
+       starring = #{starring,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null">
+        country = #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="language != null">
+        language = #{language,jdbcType=VARCHAR},
+      </if>
+      <if test="releaseDate != null">
+        release_date = #{releaseDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="filmLength != null">
+        film_length = #{filmLength,jdbcType=INTEGER},
+      </if>
+      <if test="doubanRate != null">
+        douban_rate = #{doubanRate,jdbcType=REAL},
+      </if>
+      <if test="file != null">
+       file = #{file,jdbcType=VARCHAR},
+      </if>
+      <if test="img != null">
+       img = #{img,jdbcType=VARCHAR}
+      </if>
+    </set>
+    where movie_id = #{movieId,jdbcType=VARCHAR}
+  </update>
+</mapper>

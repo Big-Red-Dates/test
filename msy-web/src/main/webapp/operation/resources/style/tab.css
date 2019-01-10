@@ -1,0 +1,47 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+.xuanxiangka {
+	width: 995px;
+}
+.xuanxiangka .hd {
+	height: 32px;
+	text-align: center;
+	font: 14px/30px "宋体";
+	border-bottom: 1px solid #CCCCCC;
+}
+.xuanxiangka  .hd span.cur {
+	border-bottom: none;
+	background: url();
+	border-top: 2px solid #F48225;
+	border-bottom: 1px solid white;
+	font-weight: bold;
+}
+.xuanxiangka  .hd .tab {
+	width: 84px;
+	height: 30px;
+	border-left: 0px;
+	border-right: 1px solid #CCCCCC;
+	border-bottom: 1px solid #CCCCCC;
+	float: left;
+	cursor: pointer;
+	background: #F9F9F9;
+	color: black;
+	line-height: 30px;
+	border-top: 2px solid #CCCCCC;
+}
+  .xuanxiangka  .hd .tab a,
+  .xuanxiangka  .hd .tab a:LINK,
+  .xuanxiangka  .hd .tab a:visited,
+  .xuanxiangka  .hd .tab a:HOVER,
+  .xuanxiangka  .hd .tab a:ACTIVE{
+ 	color: black !important;
+ } 
+
+ 
+
+ 
+
+
+

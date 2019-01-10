@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.msy.mapper.EntityRoomMapper">
+  <resultMap id="BaseResultMap" type="com.msy.model.EntityRoom">
+    <id column="room_id" jdbcType="VARCHAR" property="roomId" />
+    <result column="room_no" jdbcType="VARCHAR" property="roomNo" />
+    <result column="room_name" jdbcType="VARCHAR" property="roomName" />
+    <result column="entity_id" jdbcType="VARCHAR" property="entityId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    room_id, room_no, room_name, entity_id
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_entity_room
+    where room_id = #{roomId,jdbcType=VARCHAR}
+  </select>
+ 
+ <select id="selectListByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_entity_room
+    where entity_id = #{entityId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="countEntityroom" resultType="java.lang.Integer">
+    select 
+    count(*)
+    from t_entity_room
+  </select>
+  
+  <select id="selectall" resultMap="EntityRoomResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_entity_room
+  </select>
+ 
+ <select id="selectByroomid" parameterType="java.lang.String" resultMap="EntityRoomResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_entity_room
+    where room_id = #{roomId,jdbcType=VARCHAR}
+  </select>
+  
+ <resultMap type="com.msy.model.EntityRoom" id="EntityRoomResultMap">  
+    <id column="room_id" jdbcType="VARCHAR" property="roomId" />
+    <result column="room_no" jdbcType="VARCHAR" property="roomNo" />
+    <result column="room_name" jdbcType="VARCHAR" property="roomName" />
+    <result column="entity_id" jdbcType="VARCHAR" property="entityId" />
+    <association property="entity" column="entity_id" javaType="com.msy.model.Entity" select="com.msy.mapper.EntityMapper.searchEntityById">  
+    </association>  
+   </resultMap>
+ 
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_entity_room
+    where room_id = #{roomId,jdbcType=VARCHAR}
+  </delete>
+
+  
+  <insert id="insert" parameterType="com.msy.model.EntityRoom">
+    insert into t_entity_room
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="roomId != null">
+        room_id,
+      </if>
+      <if test="roomNo != null">
+        room_no,
+      </if>
+      <if test="roomName != null">
+        room_name,
+      </if>
+      <if test="entityId != null">
+        entity_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="roomId != null">
+        #{roomId,jdbcType=VARCHAR},
+      </if>
+      <if test="roomNo != null">
+        #{roomNo,jdbcType=VARCHAR},
+      </if>
+      <if test="roomName != null">
+        #{roomName,jdbcType=VARCHAR},
+      </if>
+      <if test="entityId != null">
+        #{entityId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.msy.model.EntityRoom">
+
+    update t_entity_room
+    <set>
+      <if test="roomNo != null">
+        room_no = #{roomNo,jdbcType=VARCHAR},
+      </if>
+      <if test="roomName != null">
+        room_name = #{roomName,jdbcType=VARCHAR},
+      </if>
+      <if test="entityId != null">
+        entity_id = #{entityId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where room_id = #{roomId,jdbcType=VARCHAR}
+  </update>
+</mapper>

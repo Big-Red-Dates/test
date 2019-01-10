@@ -1,0 +1,182 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title></title>
+	<link href="../resources/style/page.public.css" rel="stylesheet" />
+	<link href="../resources/style/page.table.css" rel="stylesheet" />
+	
+	<script src="../resources/js-plug/jquery/jquery-1.9.1.js"></script>
+	<link href="../resources/style/sys.css" rel="stylesheet" />
+	
+	<link href="../resources/xyt-pager/style.css" rel="stylesheet" />
+	<script src="../resources/xyt-pager/pager.js"></script>
+	<script src="../resources/js-plug/My97DatePicker/WdatePicker.js"></script>
+	<script src="../resources/js-plug/sys.js"></script>
+</head>
+<body style="overflow-y:hidden;overflow-x:hidden">
+
+	<!-- BEGIN 内容区-->
+	<div class="main-big">
+		<div class="main-b-box">
+			<!-- BEGIN table组件-->
+			<div class="main-b-contentbox">
+				<div class="contentbox-title-nav">
+					<div class="navigations">
+						<ul>
+							<li><a href="#">首页</a> <span>&gt;</span></li>
+							<li><a href="#">系统管理</a> <span>&gt;</span></li>
+							<li><a href="#">订单查询</a></li>
+						</ul>
+					</div>
+				</div>
+				<form id="orderSearchForm" name="orderSearchForm">
+					<div class="contentbox-body">
+
+						<div class="table-query">
+							<div class="table-group query-inline-num3">
+								<input type="text" id="orderId" name="orderId" value=""
+									placeholder="订单ID"  onchange="changeorderId()" onkeydown="changeorderId()"/> 
+								<input type="text" id="projectorId"
+									name="projectorId" value="" placeholder="实体ID" onchange="changeprojectorId()" onkeydown="changeprojectorId()"/> 
+							</div>
+							<div class="table-group query-inline-num3">
+								<input type="text" name="startDt" id="startDt" value="" placeholder="支付起始时间" readonly="readonly"  onclick="WdatePicker({maxDate:'#F{$dp.$D(\'endDt\')}',dateFmt:'yyyy-MM-dd'});changestartDt()"  onchange="changestartDt()" onkeydown="changestartDt()"/>
+                            	<input type="text" name="endDt" id="endDt" value="" placeholder="支付截止时间" readonly="readonly"  onclick="WdatePicker({minDate:'#F{$dp.$D(\'startDt\')}',dateFmt:'yyyy-MM-dd'});changeendDt()" onchange="changeendDt()" onkeydown="changeendDt()" />
+								<button type="button" onclick="searchOrderLog()">查询</button>
+								<button type="button"  class="perm" id="resetButton" >重置</button>
+								<!-- <button type="button" onclick="modPwd('下单','/front/order/add.html')" >下单</button> -->
+							</div>
+						</div>
+					</div>
+
+					<div class="table-scrollable">
+						<div class="table-wrapper">
+							<table class="table table-striped table-hover table-bordered">
+								<thead>
+									<tr>
+										<th width="10%">订单ID</th>
+										<th width="10%">订单总价</th>
+										<th width="5%">用户标识</th>
+										<th width="20%">支付时间</th>
+										<th width="10%">支付状态</th>
+										<th width="15%">操作</th>
+									</tr>
+								</thead>
+								<tbody id="searchOrderContent">
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="page-scrollable">
+						<div class="table-pages">
+							<div id="xyt-pager"></div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			
+			 initXytItem();
+			$("#resetButton").click(function(){
+	        	$("#orderSearchForm")[0].reset();
+	        	$('[placeholder]').focusout();
+	        	//Start =====搜索框初始为灰
+	        	changesel_input_style();
+	        	//End =======搜索框初始为灰
+	        	searchOrderLog();
+		    });
+			createPager("searchOrderLog", "xyt-pager", 5);
+			searchOrderLog();
+			placeholder();
+			//Start =====搜索框初始为灰
+			changesel_input_style(); 
+			//End =======搜索框初始为灰
+		});
+		
+		function changeorderId(){
+        	$("#orderId").css({"color":"black"});
+        }
+		
+		function changeprojectorId(){
+        	$("#projectorId").css({"color":"black"});
+        }
+		
+		function changestartDt(){
+		  	$("#startDt").css({"color":"black"});
+		  	if (document.getElementById("startDt").value=='登录起始时间'){
+				document.getElementById("startDt").value='';
+		    }
+		}
+		
+		function changeendDt(){
+		  	$("#endDt").css({"color":"black"});
+		  	if (document.getElementById("endDt").value=='登录截止时间'){
+				document.getElementById("endDt").value='';
+		    }
+		}
+
+		function searchOrderLog() {
+			
+			topLoading();
+			$('[placeholder]').focusin();
+			var orderId = $('#orderId').val();
+			var projectorId = $('#projectorId').val();
+			var startDt = $('#startDt').val();
+			var endDt = $('#endDt').val();
+			if(endDt){
+				endDt = endDt + ' 23:59:59';
+			} 
+			var offset = parseInt($('[name="pageSize"]').val()) * (parseInt($('[name="currentPage"]').val()) - 1);//分页码
+			$.post(getContextPath() + "/order/search",{orderId:orderId,projectorId:projectorId,startDt:startDt,endDt:endDt,offset:offset,currentPage:$('[name="currentPage"]').val(),pageSize:$('[name="pageSize"]').val()}, function(
+					resultBean, status, request) {
+				topLoaded();
+				$('[placeholder]').focusout();
+				$("#searchOrderContent").html("");
+				var beanList = resultBean.resultData.beanList;
+				var bean = "";
+				for (var i = 0; i < beanList.length; i++) {
+					bean = beanList[i];
+					console.log("bean -->"+bean.orderId);
+					var payStatus = '未支付';
+					if(bean.payStatus == '1'){
+						payStatus = '已支付';
+					}
+					appendTrToTBody(i, "searchOrderContent", new Array(
+						"<span title='" + bean.orderId + "'>" + bean.orderId + "</span>", 
+						"<span title='" + bean.allPrice + "'>" + bean.allPrice + "</span>", 
+						"<span title='" + bean.userId + "'>" + bean.userId + "</span>", 
+						"<span title='" + bean.payTime + "'>" + timestampToTime(bean.payTime) + "</span>",
+						"<span title='" + bean.payStatus + "'>" + payStatus + "</span>", 
+						//"<span title='" + bean.orderId + "'>" + "<a href=\"javascript:modPwd('修改订单','/front/order/edit.html?orderId="+bean.orderId+"');\">修改</a>"+ "<a href='javascript:deleteCustomer(\"" + bean.orderId + "\");'>删除</a></span>"
+						"<span title='" + bean.orderId + "'>" + "<a href=\"javascript:modPwd('查看订单','/front/order/editvo.html?orderId="+bean.orderId+"');\">查看</a></span>"
+						));
+				}
+				setAjaxPagerValues("searchOrderLog",
+					resultBean.resultData.dataSize, 
+					resultBean.resultData.pageSize,
+					resultBean.resultData.currentPage);
+			}, 'json');
+		}
+		function deleteCustomer(id) {
+			if(confirm('确实要删除该吗?')) {
+				$.post(getContextPath()+"/order/delete",{"orderId":id},function(data){
+					console.log(data);
+					if(data == "OK"){
+						searchOrderLog();
+						_message("删除成功！");
+					}
+					
+				});
+			}
+		}
+	</script>
+
+</body>
+</html>

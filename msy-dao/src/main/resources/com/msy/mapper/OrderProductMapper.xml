@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.msy.mapper.OrderProductMapper">
+  <resultMap id="BaseResultMap" type="com.msy.model.OrderProduct">
+    <id column="order_product_id" jdbcType="VARCHAR" property="orderProductId" />
+    <result column="product_id" jdbcType="VARCHAR" property="productId" />
+    <result column="product_name" jdbcType="VARCHAR" property="productName" />
+    <result column="open_time_length" jdbcType="TINYINT" property="openTimeLength" />
+    <result column="product_price" jdbcType="DECIMAL" property="productPrice" />
+    <result column="order_id" jdbcType="VARCHAR" property="orderId" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    order_product_id, product_id, product_name, open_time_length, product_price, order_id
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_order_product
+    where order_product_id = #{orderProductId,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_order_product
+    where order_product_id = #{orderProductId,jdbcType=VARCHAR}
+  </delete>
+
+  
+  <insert id="insert" parameterType="com.msy.model.OrderProduct">
+    insert into t_order_product
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderProductId != null">
+        order_product_id,
+      </if>
+      <if test="productId != null">
+        product_id,
+      </if>
+      <if test="productName != null">
+        product_name,
+      </if>
+      <if test="openTimeLength != null">
+        open_time_length,
+      </if>
+      <if test="productPrice != null">
+        product_price,
+      </if>
+      <if test="orderId != null">
+        order_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderProductId != null">
+        #{orderProductId,jdbcType=VARCHAR},
+      </if>
+      <if test="productId != null">
+        #{productId,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null">
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="openTimeLength != null">
+        #{openTimeLength,jdbcType=TINYINT},
+      </if>
+      <if test="productPrice != null">
+        #{productPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="orderId != null">
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterType="com.msy.model.OrderProduct">
+    update t_order_product
+    <set>
+      <if test="productId != null">
+        product_id = #{productId,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null">
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="openTimeLength != null">
+        open_time_length = #{openTimeLength,jdbcType=TINYINT},
+      </if>
+      <if test="productPrice != null">
+        product_price = #{productPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="orderId != null">
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where order_product_id = #{orderProductId,jdbcType=VARCHAR}
+  </update>
+</mapper>

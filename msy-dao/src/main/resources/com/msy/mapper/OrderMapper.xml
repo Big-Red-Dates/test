@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.msy.mapper.OrderMapper">
+  <resultMap id="BaseResultMap" type="com.msy.model.Order">
+    <id column="order_id" jdbcType="VARCHAR" property="orderId" />
+    <result column="all_price" jdbcType="DECIMAL" property="allPrice" />
+    <result column="pay_price" jdbcType="DECIMAL" property="payPrice" />
+    <result column="pay_time" jdbcType="TIMESTAMP" property="payTime" />
+    <result column="pay_type" jdbcType="TINYINT" property="payType" />
+    <result column="pay_status" jdbcType="TINYINT" property="payStatus" />
+    <result column="business_status" jdbcType="TINYINT" property="businessStatus" />
+    <result column="projector_id" jdbcType="VARCHAR" property="projectorId" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
+    <result column="house_id" jdbcType="VARCHAR" property="houseId" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="notify_time" jdbcType="TIMESTAMP" property="notifyTime" />
+    <result column="rowflag" jdbcType="INTEGER" property="rowflag" />
+    <result column="resp_code" jdbcType="VARCHAR" property="respCode" />
+    <result column="resp_desc" jdbcType="VARCHAR" property="respDesc" />
+  </resultMap>
+  <sql id="Base_Column_List"> 
+    order_id, all_price, pay_price, pay_time, pay_type, pay_status, business_status, 
+    projector_id, created_time, updated_time, house_id, user_id, notify_time, rowflag, 
+    resp_code, resp_desc
+  </sql>
+  
+    <resultMap id="BaseResultVo" type="com.msy.model.OrderVo">
+    <id column="order_id" jdbcType="VARCHAR" property="orderId" />
+    <result column="all_price" jdbcType="DECIMAL" property="allPrice" />
+    <result column="pay_price" jdbcType="DECIMAL" property="payPrice" />
+    <result column="pay_time" jdbcType="TIMESTAMP" property="payTime" />
+    <result column="pay_type" jdbcType="TINYINT" property="payType" />
+    <result column="pay_status" jdbcType="TINYINT" property="payStatus" />
+    <result column="business_status" jdbcType="TINYINT" property="businessStatus" />
+    <result column="projector_id" jdbcType="VARCHAR" property="projectorId" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
+    <result column="house_id" jdbcType="VARCHAR" property="houseId" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="notify_time" jdbcType="TIMESTAMP" property="notifyTime" />
+    <result column="rowflag" jdbcType="INTEGER" property="rowflag" />
+    <result column="resp_code" jdbcType="VARCHAR" property="respCode" />
+    <result column="resp_desc" jdbcType="VARCHAR" property="respDesc" />
+    <result column="entity_name" jdbcType="VARCHAR" property="entityName" />
+    <result column="entity_type" jdbcType="TINYINT" property="entityType" />
+    <result column="product_id" jdbcType="VARCHAR" property="productId" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="province" jdbcType="VARCHAR" property="province" />
+    <result column="product_name" jdbcType="VARCHAR" property="productName" />
+    <result column="open_time_length" jdbcType="BIGINT" property="openTimeLength" />
+    <result column="product_price" jdbcType="DECIMAL" property="productPrice" />
+  </resultMap>
+
+	<select id="selectOrderVoByPrimaryKey" parameterType="java.lang.String"
+		resultMap="BaseResultVo">
+		SELECT r.*,er.*,e.*,p.* from
+		(
+		SELECT * from t_order where order_id = #{orderId,jdbcType=VARCHAR}
+		) r LEFT JOIN t_entity_room er on er.room_id = r.house_id LEFT JOIN
+		t_entity e on er.entity_id = e.entity_id LEFT JOIN t_product p on
+		e.product_id = p.product_id
+	</select>
+	
+  <!-- <select id="count" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select 
+    count(*)
+    from t_order
+    where user_id = #{entity.userId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="search" parameterType="com.msy.utils.PagerEntity" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_order
+    where user_id = #{entity.userId,jdbcType=VARCHAR}
+    order by created_time  desc 
+		limit #{offset}, #{pageSize}
+  </select> -->
+  <select id="count" parameterType="com.msy.model.Order" resultType="java.lang.Integer">
+    select 
+    count(*)
+    from t_order
+    <where>
+		<if test="userId != null">
+			user_id = #{userId,jdbcType=VARCHAR}
+		</if>
+		<if test="orderId != null and orderId != ''">
+			and order_id = #{orderId,jdbcType=VARCHAR}
+		</if>
+		<if test="projectorId != null and projectorId != ''">
+			and projector_id = #{projectorId,jdbcType=VARCHAR}
+		</if>
+		<if test="startDt != null and startDt != ''">
+			and pay_time &gt;= #{startDt,jdbcType=TIMESTAMP}
+		</if>
+		<if test="endDt != null and endDt != ''">
+			and pay_time &lt;= #{endDt,jdbcType=TIMESTAMP}
+		</if>
+	</where>
+  </select>
+  
+  <select id="search" parameterType="com.msy.model.Order" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_order
+    <where>
+		<if test="userId != null">
+			user_id = #{userId,jdbcType=VARCHAR}
+		</if>
+		<if test="orderId != null and orderId != ''">
+			and order_id = #{orderId,jdbcType=VARCHAR}
+		</if>
+		<if test="projectorId != null and projectorId != ''">
+			and projector_id = #{projectorId,jdbcType=VARCHAR}
+		</if>
+		<if test="startDt != null and startDt != ''">
+			and pay_time &gt;= #{startDt,jdbcType=TIMESTAMP}
+		</if>
+		<if test="endDt != null and endDt != ''">
+			and pay_time &lt;= #{endDt,jdbcType=TIMESTAMP}
+		</if>
+	</where>
+    order by created_time  desc 
+		limit #{offset}, #{pageSize}
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_order
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByOrderIdAndpaystatus" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_order
+    where order_id = #{orderId,jdbcType=VARCHAR} and pay_status = 1
+  </select>
+  
+  <select id="getOrderByUserId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_order
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_order
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="com.msy.model.Order">
+    insert into t_order
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="allPrice != null">
+        all_price,
+      </if>
+      <if test="payPrice != null">
+        pay_price,
+      </if>
+      <if test="payTime != null">
+        pay_time,
+      </if>
+      <if test="payType != null">
+        pay_type,
+      </if>
+      <if test="payStatus != null">
+        pay_status,
+      </if>
+      <if test="businessStatus != null">
+        business_status,
+      </if>
+      <if test="projectorId != null">
+        projector_id,
+      </if>
+      <if test="createdTime != null">
+        created_time,
+      </if>
+      <if test="updatedTime != null">
+        updated_time,
+      </if>
+      <if test="houseId != null">
+        house_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="notifyTime != null">
+        notify_time,
+      </if>
+      <if test="rowflag != null">
+        rowflag,
+      </if>
+      <if test="respCode != null">
+        resp_code,
+      </if>
+      <if test="respDesc != null">
+        resp_desc,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="allPrice != null">
+        #{allPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="payPrice != null">
+        #{payPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="payTime != null">
+        #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payType != null">
+        #{payType,jdbcType=TINYINT},
+      </if>
+      <if test="payStatus != null">
+        #{payStatus,jdbcType=TINYINT},
+      </if>
+      <if test="businessStatus != null">
+        #{businessStatus,jdbcType=TINYINT},
+      </if>
+      <if test="projectorId != null">
+        #{projectorId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null">
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedTime != null">
+        #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="houseId != null">
+        #{houseId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyTime != null">
+        #{notifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowflag != null">
+        #{rowflag,jdbcType=INTEGER},
+      </if>
+      <if test="respCode != null">
+        #{respCode,jdbcType=VARCHAR},
+      </if>
+      <if test="respDesc != null">
+        #{respDesc,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+ 
+  <update id="updateByPrimaryKey" parameterType="com.msy.model.Order">
+    update t_order
+    <set>
+      <if test="allPrice != null">
+        all_price = #{allPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="payPrice != null">
+        pay_price = #{payPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="payTime != null">
+        pay_time = #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payType != null">
+        pay_type = #{payType,jdbcType=TINYINT},
+      </if>
+      <if test="payStatus != null">
+        pay_status = #{payStatus,jdbcType=TINYINT},
+      </if>
+      <if test="businessStatus != null">
+        business_status = #{businessStatus,jdbcType=TINYINT},
+      </if>
+      <if test="projectorId != null">
+        projector_id = #{projectorId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null">
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedTime != null">
+        updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="houseId != null">
+        house_id = #{houseId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyTime != null">
+        notify_time = #{notifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowflag != null">
+        rowflag = #{rowflag,jdbcType=INTEGER},
+      </if>
+      <if test="respCode != null">
+        resp_code = #{respCode,jdbcType=VARCHAR},
+      </if>
+      <if test="respDesc != null">
+        resp_desc = #{respDesc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </update>
+  <sql id="Base_Column_List_a"> 
+    a.order_id, a.all_price, a.pay_price, a.pay_time, a.pay_type, a.pay_status, a.business_status, 
+    a.projector_id, a.created_time, a.updated_time, a.house_id, a.user_id, a.notify_time, a.rowflag, 
+    a.resp_code, a.resp_desc
+  </sql>
+  <sql id="Base_Column_List_b"> 
+    , b.product_id, b.product_name, b.open_time_length, b.product_price
+  </sql>
+  <select id="setOrderByIdList" parameterType="com.msy.model.Order" resultMap="BaseResultVo">
+    select 
+    <include refid="Base_Column_List_a" />
+    <include refid="Base_Column_List_b" />
+    from t_order AS a, t_order_product AS b
+    <where>
+		a.order_id = b.order_id AND a.user_id = #{userId,jdbcType=VARCHAR} AND a.order_id = #{orderId,jdbcType=VARCHAR}
+	</where>
+	limit 1
+  </select>
+  <update id="setupdateOrderUpdate" parameterType="com.msy.model.Order">
+    update t_order
+    <set>
+      <if test="allPrice != null">
+        all_price = #{allPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="payPrice != null">
+        pay_price = #{payPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="payTime != null">
+        pay_time = #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payType != null">
+        pay_type = #{payType,jdbcType=TINYINT},
+      </if>
+      <if test="payStatus != null">
+        pay_status = #{payStatus,jdbcType=TINYINT},
+      </if>
+      <if test="businessStatus != null">
+        business_status = #{businessStatus,jdbcType=TINYINT},
+      </if>
+      <if test="projectorId != null">
+        projector_id = #{projectorId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null">
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedTime != null">
+        updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="houseId != null">
+        house_id = #{houseId,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyTime != null">
+        notify_time = #{notifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowflag != null">
+        rowflag = #{rowflag,jdbcType=INTEGER},
+      </if>
+      <if test="respCode != null">
+        resp_code = #{respCode,jdbcType=VARCHAR},
+      </if>
+      <if test="respDesc != null">
+        resp_desc = #{respDesc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=VARCHAR} and order_id = #{orderId,jdbcType=VARCHAR}
+  </update>
+  <delete id="setdelOrderDelete" parameterType="com.msy.model.Order">
+    delete from t_order
+    where user_id = #{userId,jdbcType=VARCHAR} and order_id = #{orderId,jdbcType=VARCHAR}
+  </delete>
+  <select id="setOrderByIdRemote" parameterType="com.msy.model.Order" resultMap="BaseResultMap">
+    select 
+    projector_id AS order_id
+    from t_room_projector
+    <where>
+		room_id = (SELECT room_id FROM t_entity_room WHERE room_no = #{houseId,jdbcType=VARCHAR} and entity_id = (SELECT entity_id FROM t_operator WHERE operator_id = #{userId,jdbcType=VARCHAR}))
+	</where>
+  </select>
+	
+</mapper>

@@ -1,0 +1,60 @@
+/*
+ | --------------------------------------------------------
+ | File        : public-style.css
+ | Project     : Html
+ | Version     : 1.1 |
+ | Description : Public stylesheet.
+ | Author      : Liu FuChang
+ | Author URL  : 
+ | Plugin URL  : 
+ | Copyright (C) 2013-2014  Liu FuChang
+ | --------------------------------------------------------
+ */
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video { margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline; }
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block; }
+body { line-height: 1; font-family: ËÎÌו,'Microsoft YaHei';font-size:13px; }
+ol, ul { list-style: none; }
+blockquote, q { quotes: none; }
+    blockquote:before, blockquote:after, q:before, q:after { content: ''; content: none; }
+table { border-collapse: collapse; border-spacing: 0; }
+a { text-decoration: none; }
+
+.xyt-minW { min-width: 990px; }
+.xyt-minH { }
+.fn-left { float: left; }
+.fn-right { float: right; }
+.fn-clear { clear: both; }
+.fn-pos-relative { position: relative; }
+.fn-pos-absolute { position: absolute; }
+.sp_bg { background: url(../images/public/all_bg.gif) no-repeat; }
+.margin_0_auto { margin: 0 auto; width: 1000px; }
+.width_c { width: 1000px; }
+
+.xyt-m-header { background: #ffffff; height: 129px; }
+.m-header-inner { height: 91px; }
+    .m-header-inner .m-header-img { height: 86px; width: 500px; }
+.m-header-i-img_font { height: 91px; background: url(../images/public/in-bg.jpg) no-repeat right; }
+.m-header-inner .m-header-i-logo { width: 450px; height: 90px; }
+    .m-header-inner .m-header-i-logo .m-heder-i-logo-img { padding-top: 9px; }
+    .m-header-inner .m-header-i-logo .m-heder-i-logo-font { padding-top: 21px; }
+.m-header-font { width: 300px; height: 90px; }
+.m-header-font_num { font-size: 22px; color: #737474; width: 300px; }
+    .m-header-font_num h5 { right: 5px; top: 19px; width: 261px; }
+.m-header-font_mage ul { top: 53px; }
+    .m-header-font_mage ul li { text-align: center; height: 16px; line-height: 16px; }
+.m-header-t-nav { height: 37px; background: #75d212; border-bottom: 1px solid #386011; }
+.m-header-t-nav-inner { height: 38px; width: 226px; }
+.m-header-t-bar-bg-inner { height: 37px; width: 553px; }
+.m-header-t-but-inner { width: 190px; }
+    .m-header-t-but-inner div { padding: 7px 0px 5px 15px; }
+        .m-header-t-but-inner div button { height: 24px; border: none; background-position:0 -40px; margin-left: 15px; }
+.m-header-t-nav-i-font { height: 56px; width: 226px; bottom: 0px; background: url(../images/public/m-header-t-nav-i-font.jpg) no-repeat right;  }
+    .m-header-t-nav-i-font .m-header-font_title { height: 46px; width: 202px; background: #336600; padding-top: 10px; padding-left: 15px; }
+        .m-header-t-nav-i-font .m-header-font_title h5 { color: #ffffff; font-size: 30px; }
+.xyt-m-footer { height:115px; width:100%; background:#323232; color:#999999;}
+.xyt-m-footer-bg { height:90px; width:100%; background:#323232; color:#999999; padding-top:25px; }
+.footer { width: 980px; margin: 0 auto 15px auto; text-align: center; }
+    .footer span { margin: 0px 10px 0px 10px; line-height: 23px; }
+        .footer span img { vertical-align: text-top; }
+    .footer a { color: #919292; margin: 0px 5px 0px 5px; }

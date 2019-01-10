@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title></title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<link href="../resources/style/page.form.css" rel="stylesheet" />
+<link href="../resources/style/jqueryValidate/jquery.validate.css"
+	rel="stylesheet" />
+<script src="../resources/js-plug/jquery.validate/jquery.validate.js"></script>
+<script
+	src="../resources/js-plug/jquery.validate/jquery.validate.method.js"></script>
+<script src="../resources/js-plug/My97DatePicker/WdatePicker.js"></script>
+<script src="../resources/js-plug/md5.js"></script>
+<!-- 树型选择器样式 -->
+<link href="../resources/xyt-select/style.css" rel="stylesheet" />
+<!-- 树型选择器 -->
+<script src="../resources/js-plug/jquery.jstree.js"></script>
+<script src="../resources/xyt-select/select.js"></script>
+<style type="text/css">
+.txt {
+	width: 161px;
+}
+
+.selectDiv ul {
+	width: 178px;
+}
+
+.orgOnly {
+	display: none;
+}
+
+label.orgError {
+	color: #FF0000;
+	font-size: 12px;
+	font-weight: bold;
+	margin-left: 10px;
+	padding-bottom: 2px;
+}
+</style>
+<script type="text/javascript">
+	function passwordOnfocus(){
+		$("#oldPwdSPAN").html("");
+	}
+</script>
+</head>
+<body>
+	<div class="middle-main">
+		<div class="msg"></div>
+		<div class="listtab">
+			<form action="" id="modpwdFROM" method="post">
+				<input id="orderId" name="orderId" type="hidden" value="" />
+				<input id="projectorId" name="projectorId" type="hidden" value="" />
+				<div class="form-blog">
+					<div>
+						<div class="row">
+							<label class="labeltext xing">房间标识：</label> <input type="text"
+								name="houseId" maxlength="20" id="houseId" 
+								class="middleinput" /><b style="color: red;"
+								class="edit_hide">*</b> <span id="oldPwdSPAN" style="color: red;"></span>
+						</div>
+						<div class="row">
+							<label class="labeltext xing">订单总价格：</label> <input type="text"
+								name="allPrice" maxlength="20" id="allPrice"
+								class="middleinput"><b style="color: red;"
+								class="edit_hide">*</b>
+						</div>
+						<div class="row">
+							<label class="labeltext xing">实际支付金额：</label> <input type="text" onfocus="passwordOnfocus();"
+								name="payPrice" maxlength="20" id="payPrice" class="middleinput"><b
+								style="color: red;" class="edit_hide">*</b> <span id="pwdSPAN"
+								style="color: green;"></span>
+						</div>
+						<div class="row">
+							<label class="labeltext xing">支付：</label>
+						</div>
+					</div>
+					<div class="form-save">
+						<span class="but">
+							<button type="submit" id="saveButton">
+								<div class="but-left"></div>
+								<div class="but-center">保存</div>
+								<div class="but-right"></div>
+							</button>
+						</span> <span class="but">
+							<button type="button" class="but-close">
+								<div class="but-left"></div>
+								<div class="but-center">取消</div>
+								<div class="but-right"></div>
+							</button>
+						</span>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(
+				function() {
+					var _location_url = $('#parm_val').val();
+					var orderId = getUrlParam('orderId', _location_url);
+					//console.log(orderId,'41515');
+					$.ajax({
+						type:"post",
+						url:getContextPath()+"/order/edit/",
+						data:{"orderId":orderId},
+						success:function(data) {
+							$("#orderId").val(data.resultData.beanList[0].orderId);
+							$("#houseId").val(data.resultData.beanList[0].houseId);
+							$("#allPrice").val(data.resultData.beanList[0].allPrice);
+							$("#payPrice").val(data.resultData.beanList[0].payPrice);
+						}
+					});
+					var validateConfige = {
+						rules : {
+							houseId : {
+								"required" : true,
+								"remote":{
+										    url: getContextPath()+"/order/remote/",     //后台处理程序
+										    type: "post",               //数据发送方式
+										    //dataType: "json",           //接受数据格式   
+										    data: {                     //要传递的数据
+										    	houseId: function() {
+										            return $("#houseId").val();
+										        }
+										    }
+										}
+							},
+							allPrice : {
+								"required" : true,
+								"number":true
+							},
+							payPrice : {
+								"required" : true,
+								"number":true
+							}
+						},
+						messages : {
+							houseId : {
+								required : "必填。",
+								remote:jQuery.format("房间错误或官理员未录入此房间")
+							},
+							allPrice : {
+								required : "必填。",
+								number : "必须输入合法的数字（负数，小数）。"
+							},
+							payPrice : {
+								required : "必填。",
+								number : "必须输入合法的数字（负数，小数）。"
+							}
+						},
+						submitHandler : function() {
+							$.post(getContextPath()+"/order/remoteid",{houseId:$("#houseId").val()},function(dataid){
+								if(dataid != ""){
+									$("#projectorId").val(dataid);
+									$.post(getContextPath()+"/order/update",$("#modpwdFROM").serialize(),function(data){
+										console.log(data);
+										if(data == "OK"){
+											//iframeid
+											//searchOrderLog();
+											$("#iframeid")[0].contentWindow.searchOrderLog();
+											_showMessage("更新成功！",'success',1000);
+										}
+										
+									});
+								}
+								
+							});
+						}
+					};
+					$("#modpwdFROM").validate(validateConfige);
+					
+				});
+	</script>
+</body>
+</html>

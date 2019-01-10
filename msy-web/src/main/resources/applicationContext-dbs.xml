@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camel="http://camel.apache.org/schema/spring"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+            http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+	<!-- 注入数据源连接配置文件 -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath*:/jdbc.properties</value>
+				<value>classpath*:/application-*.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 数据源1配置 -->
+	<bean id="ds_master" class="com.alibaba.druid.pool.DruidDataSource"
+		  destroy-method="close">
+		<property name="driverClassName" value="${datasource.master.driverClassNames}" />
+		<property name="url" value="${datasource.master.jdbcUrls}" />
+		<property name="username" value="${datasource.master.usernames}" />
+		<property name="password" value="${datasource.master.passwords}" />
+	</bean>
+	<!-- 数据源2配置 -->
+	<bean id="ds_slave" class="com.alibaba.druid.pool.DruidDataSource"
+		  destroy-method="close" primary="true">
+		<property name="driverClassName" value="${datasource.slave.driverClassNames}" />
+		<property name="url" value="${datasource.slave.jdbcUrls}" />
+		<property name="username" value="${datasource.slave.usernames}" />
+		<property name="password" value="${datasource.slave.passwords}" />
+	</bean>
+	<!-- 配置多数据源  -->
+	<bean name="dynamicDatasource" class="com.msy.datasource.DynamicDataSource">
+		<property name="targetDataSources">
+			<map>
+				<entry key="ds_master" value-ref="ds_master"/>
+				<entry key="ds_slave" value-ref="ds_slave"/>
+			</map>
+		</property>
+		<!-- 指定一个默认的数据源，即在不需要切换数据源时，本地系统默认使用的数据源 -->
+		<property name="defaultTargetDataSource" ref="ds_master" />
+	</bean>
+	<bean name="dynamicDataSourceAspect" class="com.msy.datasource.DynamicDataSourceAspect"/>
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dynamicDatasource" />
+		<property name="typeAliasesPackage" value="com.msy.model" />
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
+		<!-- 自动扫描mapping.xml文件 -->
+		<property name="mapperLocations" value="classpath*:com/msy/mapper/*Mapper.xml"></property>
+	</bean>
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.msy.mapper" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+	</bean>
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dynamicDatasource" />
+		<qualifier value="transactionManager" />  
+	</bean>
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
+
+</beans> 

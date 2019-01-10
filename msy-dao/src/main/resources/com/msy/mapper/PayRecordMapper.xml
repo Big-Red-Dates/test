@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.msy.mapper.PayRecordMapper">
+  <resultMap id="BaseResultMap" type="com.msy.model.PayRecord">
+    <id column="order_room_id" jdbcType="VARCHAR" property="orderRoomId" />
+    <result column="room_id" jdbcType="VARCHAR" property="roomId" />
+    <result column="order_id" jdbcType="VARCHAR" property="orderId" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="active_time" jdbcType="TIMESTAMP" property="activeTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    order_room_id, room_id, order_id, created_time, active_time
+  </sql>
+  <insert id="insert" parameterType="com.msy.model.PayRecord">
+    insert into t_play_record (order_room_id, room_id, order_id, 
+      created_time, active_time)
+    values (#{orderRoomId,jdbcType=VARCHAR}, #{roomId,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, 
+      #{createdTime,jdbcType=TIMESTAMP}, #{activeTime,jdbcType=TIMESTAMP})
+  </insert>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_play_record
+    where order_room_id = #{orderRoomId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectAll"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_play_record
+  </select>
+  
+</mapper>

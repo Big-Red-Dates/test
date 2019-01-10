@@ -1,0 +1,125 @@
+* { padding: 0px; margin: 0px; }
+img { border: 0; }
+.main-dialog{
+	width: 760px;
+}
+.middleinput{
+	width: 197px;
+	height: 25px;
+	border: 1px solid #B0C4CD;
+}
+.largeinput{
+	width:527px;
+}
+.teshu{
+	width: 515px;
+}
+.input{
+	width: 440px;
+}
+
+/*新增广告*/
+
+.dialog-table{
+	width: 100%;
+	font-size: 12px;
+}
+.dialog-table .row{
+	border-bottom: 1px solid #EEECED;
+	line-height: 37px;
+	width: 95%;
+	padding-left: 35px;
+	overflow: hidden;
+	_zoom:1;
+}
+.dialog-table .noborder{
+	border: 0px;
+	padding-top: 10px;
+}
+.dialog-table .imgdiv{
+	padding: 10px 0px 10px 100px;
+	width: 84%;
+}
+.redstart{
+	color: #FF7900;
+	float: left;
+	width: 10px;
+}
+.browsebut{
+	width: 70px;
+	height: 32px;
+	line-height: 28px;
+	text-align: center;
+}
+.spantext{
+	float: left;
+	width: 65px;
+	line-height: 37px;
+	text-align: left;
+}
+.spaninput{
+	float: left;
+	width: 255px;
+	line-height: 37px;
+	text-align: left;
+}
+.largerspaninput{
+	width: 450px;
+}
+.teshuspan{
+	width: 640px;
+}
+.spanbut{
+	width: 70px;
+	height:33px;
+	padding-top:3px;
+}
+.spanimg{
+	width: 98px;
+	height: 98px;
+	border: 2px solid #CBCBCB;
+	margin-right: 10px;
+	float: left;
+}
+.curspanimg{
+	border-color: gray;
+	position: relative;
+}
+.closeimg{
+	position: absolute;
+	width: 22px;
+	height: 21px;
+	background: url(../images/dailog-img/closeimg.png) no-repeat;
+	top: -11px;
+	right: -11px;
+}
+.ad-but-bg{
+	width: 94px;
+	height: 34px;
+	background: url(../images/news-img/big-but.jpg) no-repeat;
+	border: 0px;
+	color: white;
+	font-weight: bold;
+	margin-right: 30px;
+}
+.ad-but{
+	padding: 30px 0px 80px 0px;
+	text-align: center;
+}
+
+
+/*新增广告明细*/
+.largearea{
+	width: 527px;
+	height: 80px;
+}
+.areatext{
+	width: 515px;
+	height: 80px;
+}
+.textarea-tip{
+	color: gray;
+}
+.but{
+	text-align: center;
+}

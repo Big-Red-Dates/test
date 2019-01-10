@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.msy.mapper.ProjectorMapper">
+	<resultMap id="ProjectorResultMap" type="com.msy.model.Projector">
+		<id column="projector_id" jdbcType="VARCHAR" property="projectorId" />
+		<result column="projector_device_id" jdbcType="VARCHAR"
+			property="projectorDeviceId" />
+		<result column="projector_name" jdbcType="VARCHAR" property="projectorName" />
+		<result column="projector_android_ver" jdbcType="VARCHAR"
+			property="projectorAndroidVer" />
+	</resultMap>
+	<sql id="Projector_Column_List">
+		projector_id, projector_device_id, projector_name, projector_android_ver
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="ProjectorResultMap">
+		select
+		<include refid="Projector_Column_List" />
+		from t_projector
+		where projector_id = #{projectorId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectall" 
+		resultMap="ProjectorResultMap">
+		select
+		<include refid="Projector_Column_List" />
+		from t_projector
+	</select>
+
+	<insert id="insert" parameterType="com.msy.model.Projector">
+		insert into t_projector (projector_id, projector_device_id, projector_name,
+		projector_android_ver)
+		values (#{projectorId,jdbcType=VARCHAR},
+		#{projectorDeviceId,jdbcType=VARCHAR},
+		#{projectorName,jdbcType=VARCHAR},
+		#{projectorAndroidVer,jdbcType=VARCHAR})
+	</insert>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from t_projector
+		where projector_id = #{projectorId,jdbcType=VARCHAR}
+	</delete>
+
+	<update id="updateByPrimaryKey" parameterType="com.msy.model.Projector">
+		update t_projector
+		set projector_device_id = #{projectorDeviceId,jdbcType=VARCHAR},
+		projector_name = #{projectorName,jdbcType=VARCHAR},
+		projector_android_ver = #{projectorAndroidVer,jdbcType=VARCHAR}
+		where projector_id = #{projectorId,jdbcType=VARCHAR}
+	</update>
+</mapper>

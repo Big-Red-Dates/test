@@ -1,0 +1,196 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title></title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<link href="../resources/style/page.form.css" rel="stylesheet" />
+<link href="../resources/style/jqueryValidate/jquery.validate.css"
+	rel="stylesheet" />
+<script src="../resources/js-plug/jquery.validate/jquery.validate.js"></script>
+<script
+	src="../resources/js-plug/jquery.validate/jquery.validate.method.js"></script>
+<script src="../resources/js-plug/My97DatePicker/WdatePicker.js"></script>
+<script src="../resources/js-plug/md5.js"></script>
+<!-- 树型选择器样式 -->
+<link href="../resources/xyt-select/style.css" rel="stylesheet" />
+<!-- 树型选择器 -->
+<script src="../resources/js-plug/jquery.jstree.js"></script>
+<script src="../resources/xyt-select/select.js"></script>
+<style type="text/css">
+.txt {
+	width: 161px;
+}
+
+.selectDiv ul {
+	width: 178px;
+}
+
+.orgOnly {
+	display: none;
+}
+
+label.orgError {
+	color: #FF0000;
+	font-size: 12px;
+	font-weight: bold;
+	margin-left: 10px;
+	padding-bottom: 2px;
+}
+</style>
+<script type="text/javascript">
+	function passwordOnfocus(){
+		$("#oldPwdSPAN").html("");
+	}
+</script>
+</head>
+<body>
+	<div class="middle-main">
+		<div class="msg"></div>
+		<div class="listtab">
+			<form action="" id="modpwdFROM" method="post">
+				<input id="orderId" name="orderId" type="hidden" value="" />
+				<input id="projectorId" name="projectorId" type="hidden" value="" />
+				<div class="form-blog">
+					<div>
+						<div class="row">
+							<label class="labeltext xing">房间标识：</label><span id="houseId" style="line-height: 25px;" /></span>
+						</div>
+						<div class="row">
+							<label class="labeltext xing">订单总价格：</label><span id="allPrice" style="line-height: 25px;" /></span>
+						</div>
+						<div class="row">
+							<label class="labeltext xing">实际支付金额：</label><span id="payPrice" style="line-height: 25px;" /></span>
+						</div>
+						<div class="row">
+							<label class="labeltext xing">商品名称：</label><span id="productName" style="line-height: 25px;" /></span>
+						</div>
+						<div class="row">
+							<label class="labeltext xing">商品时间长度：</label><span id="openTimeLength" style="line-height: 25px;" /></span>
+						</div>
+						<div class="row">
+							<label class="labeltext xing">支付时间：</label><span id="payTime" style="line-height: 25px;" /></span>
+						</div>
+						<div class="row">
+						<label class="labeltext xing">剩余时间：</label><span id="timer" style="line-height: 25px;" /></span>
+						</div>
+					</div>
+					<!-- <div class="form-save">
+						<span class="but">
+							<button type="submit" id="saveButton">
+								<div class="but-left"></div>
+								<div class="but-center">保存</div>
+								<div class="but-right"></div>
+							</button>
+						</span> <span class="but">
+							<button type="button" class="but-close">
+								<div class="but-left"></div>
+								<div class="but-center">取消</div>
+								<div class="but-right"></div>
+							</button>
+						</span>
+					</div> -->
+				</div>
+			</form>
+		</div>
+	</div>
+	<script type="text/javascript">
+var intDiff=60;
+var fiiiif;
+
+function timerkukuk(intDiff){
+			var day=0,
+			hour=0,
+			minute=0,
+			second=0;//时间默认值		
+			if(intDiff > 0){
+				day = Math.floor(intDiff / (60 * 60 * 24));
+				hour = Math.floor(intDiff / (60 * 60)) - (day * 24);
+				minute = Math.floor(intDiff / 60) - (day * 24 * 60) - (hour * 60);
+				second = Math.floor(intDiff) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+			}
+			if (minute <= 9) minute = '0' + minute;
+			if (second <= 9) second = '0' + second;
+				  document.getElementById("timer").innerHTML = day+"天" + hour+"小时" + minute+"分"+second+"秒";
+			//intDiff--;
+			if(intDiff < 0){
+				document.getElementById("timer").innerHTML = '0天0小时0分0秒';
+			}
+			//console.log(day+"天" + hour+"小时" + minute+"分"+second+"秒");
+}
+$(".close").click(function(){
+	window.clearInterval(fiiiif);
+});
+$(document).ready(
+function() {
+	var _location_url = $('#parm_val').val();
+	var orderId = getUrlParam('orderId', _location_url);
+	$("#orderId").html("");
+	$("#houseId").html("");
+	$("#allPrice").html("");
+	$("#payPrice").html("");
+	$("#productName").html("");
+	$("#openTimeLength").html('0天');
+	$("#payTime").html("");
+	$("#timer").html("0秒");
+	$.ajax({
+		type:"post",
+		dataType: 'json',
+		url:getContextPath()+"/order/edit/",
+		data:{"orderId":orderId},
+		success:function(dataList) {
+			
+			if(dataList.resultData.beanList[0].orderId){
+				$("#orderId").html(dataList.resultData.beanList[0].orderId);
+				$("#houseId").html(dataList.resultData.beanList[0].houseId);
+				$("#allPrice").html(dataList.resultData.beanList[0].allPrice);
+				$("#payPrice").html(dataList.resultData.beanList[0].payPrice);
+				
+				$("#productName").html(dataList.resultData.beanList[0].productName);
+				var openTimeLength = dataList.resultData.beanList[0].openTimeLength;
+				if(!openTimeLength){
+					openTimeLength = '0';
+				}
+				$("#openTimeLength").html(openTimeLength+'天');
+				
+				$("#payTime").html(timestampToTime(dataList.resultData.beanList[0].payTime));
+				var startTime = parseInt(dataList.startTime);
+				newDate = startTime;
+				var openTime = parseInt(openTimeLength) * 86400 * 1000 + parseInt(dataList.resultData.beanList[0].payTime);
+				var leftTimername = openTime - startTime;
+				
+				var year = timestampToTime(openTime,'Y');
+				var month = timestampToTime(openTime,'M');
+				var day = timestampToTime(openTime,'D');
+				var hour = timestampToTime(openTime,'h');
+				var minute = timestampToTime(openTime,'mx');
+				var second = timestampToTime(openTime,'s');
+				console.log(leftTimername,openTime,startTime);
+				if(openTime > startTime){
+					intDiff = leftTimername / 1000;
+				}else{
+					intDiff = 0;
+					document.getElementById("timer").innerHTML = '0秒';
+				}
+				window.clearInterval(fiiiif);
+				if(intDiff > 0){
+					fiiiif = window.setInterval(function(){
+						timerkukuk(intDiff);
+						intDiff--;
+						if(intDiff <= 0){
+							window.clearInterval(fiiiif);
+						}
+						if(!document.getElementById("timer").innerHTML){
+							window.clearInterval(fiiiif);
+						}
+					}, 1000);
+				}
+			}
+		}
+	});
+});
+
+	</script>
+</body>
+</html>

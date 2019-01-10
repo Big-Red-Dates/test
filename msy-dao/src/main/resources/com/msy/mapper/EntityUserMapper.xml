@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.msy.mapper.EntityUserMapper">
+  <resultMap id="BaseResultMap" type="com.msy.model.EntityUser">
+    <id column="entity_user_id" jdbcType="VARCHAR" property="entityUserId" />
+    <result column="entity_id" jdbcType="VARCHAR" property="entityId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    entity_user_id, entity_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_entity_user
+    where entity_user_id = #{entityUserId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_entity_user
+    where entity_user_id = #{entityUserId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.msy.model.EntityUser">
+    insert into t_entity_user (entity_user_id, entity_id)
+    values (#{entityUserId,jdbcType=VARCHAR}, #{entityId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.msy.model.EntityUser">
+    insert into t_entity_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="entityUserId != null">
+        entity_user_id,
+      </if>
+      <if test="entityId != null">
+        entity_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="entityUserId != null">
+        #{entityUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="entityId != null">
+        #{entityId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.msy.model.EntityUser">
+    update t_entity_user
+    <set>
+      <if test="entityId != null">
+        entity_id = #{entityId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where entity_user_id = #{entityUserId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.msy.model.EntityUser">
+    update t_entity_user
+    set entity_id = #{entityId,jdbcType=VARCHAR}
+    where entity_user_id = #{entityUserId,jdbcType=VARCHAR}
+  </update>
+</mapper>

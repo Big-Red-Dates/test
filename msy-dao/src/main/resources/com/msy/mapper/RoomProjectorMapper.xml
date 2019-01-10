@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.msy.mapper.RoomProjectorMapper">
+	<resultMap id="BaseResultMap" type="com.msy.model.RoomProjector">
+		<id column="room_id" jdbcType="VARCHAR" property="roomId" />
+		<id column="projector_id" jdbcType="VARCHAR" property="projectorId" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		room_id, projector_id
+	</sql>
+
+	<select id="selectByProjectorId" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_room_projector
+		where projector_id = #{projectorId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectByroomId" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_room_projector
+		where room_id = #{roomId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="countRoomProjector" resultType="java.lang.Integer">
+		select
+		count(*)
+		from t_room_projector
+	</select>
+
+	<select id="selAll" parameterType="com.msy.utils.PagerEntity"
+		resultMap="RoomProjectorResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_room_projector
+		limit #{offset}, #{pageSize}
+	</select>
+
+	<resultMap type="com.msy.model.RoomProjector" id="RoomProjectorResultMap">
+	<id column="room_id" jdbcType="VARCHAR" property="roomId" />
+    <id column="projector_id" jdbcType="VARCHAR" property="projectorId" />
+		<association property="entityroom" column="room_id"
+			javaType="com.msy.model.EntityRoom" select="com.msy.mapper.EntityRoomMapper.selectByroomid">
+		</association>
+	</resultMap>
+
+	<insert id="insert" parameterType="com.msy.model.RoomProjector">
+		insert into t_room_projector (room_id, projector_id)
+		values (#{roomId,jdbcType=VARCHAR}, #{projectorId,jdbcType=VARCHAR})
+	</insert>
+</mapper>

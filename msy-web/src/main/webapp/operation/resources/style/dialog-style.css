@@ -1,0 +1,58 @@
+* { padding: 0px; margin: 0px; }
+img { border: 0; }
+input { _position: relative; _top: 10px; *position: relative; *top: 10px; _display: block; _float: left; }
+label { _float: left; _display: block; _padding-top: 3px; *padding-top: 5px; _margin-top: -8px; }
+input.ieseven { *position: relative; *top: 1px; }
+/*确认删除对话框的样式*/
+
+#tishi { margin: 281px auto; *margin: 281px auto; width: 584px; height: 310px; overflow: hidden; _zoom: 1; }
+    #tishi .left { height: 310px; width: 5px; float: left; background: url(../images/dailog-img/left-bg.png) no-repeat; }
+    #tishi .center { height: 310px; width: 571px; float: left; background: url(../images/dailog-img/center-bg.png) repeat-x; }
+    #tishi .right { height: 310px; width: 8px; float: left; background: url(../images/dailog-img/right-bg.png) no-repeat; }
+.title { width: 551px; line-height: 42px; color: white; font-family: "微软雅黑"; padding-left: 20px; }
+.content { text-align: center; font-family: "微软雅黑"; line-height: 138px; color: #F26E0A; font-size: 22px; }
+.butt { padding-left: 185px; overflow: hidden; _zoom: 1; }
+    .butt .but { float: left; width: 80px; height: 30px; margin-right: 20px; background: url(../images/dailog-img/anniu.png) no-repeat; color: white; font-family: "微软雅黑"; line-height: 30px; text-align: center; cursor: pointer; border: 0px; }
+    .butt .cancel { background: url(../images/dailog-img/anniu2.png) no-repeat; }
+
+/*下架提示框的样式*/
+
+.main { width: 418px; height: 117px; border: 1px solid #EEE5DC; margin: 20px auto; }
+    .main .cuetitle { line-height: 32px; background-color: #F8F7E5; color: #434142; border-bottom: 1px solid #EEE5DC; text-align: center; font-family: "微软雅黑"; font-size: 14px; }
+.reason { border: 0; width: 418px; height: 84px; }
+.cue { padding-left: 246px; }
+
+/*分配权限对话框的样式*/
+
+.fenpei { width: 418px; margin: 30px auto; *margin-top: 30px; border: 1px solid #DFDFDF; overflow: hidden; _zoom: 1; padding-bottom: 20px; }
+.top { line-height: 38px; height: 38px; width: 416px; margin: 1px auto; background: url(../images/dailog-img/title-bg.png) no-repeat; }
+    .top .title { background: url(); font-size: 18px; line-height: 38px; float: left; width: 125px; }
+.close { width: 20px; height: 20px; float: right; background: url(../images/dailog-img/close-but.png) no-repeat; position: relative; top: 10px; right: 10px; cursor: pointer; }
+.list { width: 336px; margin: 22px auto; border: 1px solid #F1EDED; }
+.middle { width: 195px; height: 23px;line-height: 23px; border: 1px solid #B3C7CE; }
+.col { line-height: 48px; border-bottom: 1px solid #F1EDED; overflow: hidden; _zoom: 1; }
+.inpu { float: left; }
+.text { float: left; text-align: right; padding-right: 15px; width: 95px; font-size: 14px; font-family: "微软雅黑"; background: url(../images/jingling.png) no-repeat 24px -410px; }
+label { font-size: 12px; font-family: "微软雅黑"; padding-left: 5px; }
+.check { float: left; margin-right: 10px; overflow: hidden; _zoom: 1; }
+.chec { padding-left: 100px; *padding-left: 60px; }
+.normal { background: url(); }
+textarea { width: 195px; height: 80px; border: 1px solid #B3C7CE; }
+.remark { padding-top: 10px; }
+.decide { padding: 0px; margin: 0px; float: left; width: 78px; height: 49px; }
+.decides { width: 13px; }
+
+/* 授权 */
+.empower { width: 284px; }
+.hd { width: 282px; background: url(../images/dailog-img/fenpei-title.png) no-repeat; }
+.bd { width: 221px; }
+.coll { border-bottom: 1px solid #F1EDED; background-color: #F6F5FA; }
+.page { line-height: 24px; font-size: 14px; font-family: "微软雅黑"; padding-left: 10px; color: gray; }
+.xinxi { background-color: #F8F7E5; padding: 10px 0px; }
+.name { font-size: 14px; color: black; font-weight: bold; }
+.manag { background-color: white; padding: 10px 0px 50px 20px; }
+.manage { float: none; }
+.ft { padding-left: 100px; overflow: hidden; _zoom: 1; }
+.group { padding-left: 30px; line-height: 30px; font-size: 12px; }
+.fuhao { padding: 3px 5px; background: url(../images/jingling2.png) no-repeat -2px -248px; *background: url(../images/jingling2.png) no-repeat -2px -243px; }
+.zhan { padding: 3px 5px; background: url(../images/jingling2.png) no-repeat -2px -272px; *background: url(../images/jingling2.png) no-repeat -2px -268px; }

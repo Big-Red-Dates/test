@@ -1,0 +1,162 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title></title>
+	<link href="../resources/style/page.public.css" rel="stylesheet" />
+	<link href="../resources/style/page.table.css" rel="stylesheet" />
+	
+	<script src="../resources/js-plug/jquery/jquery-1.9.1.js"></script>
+	<link href="../resources/style/sys.css" rel="stylesheet" />
+	
+	<link href="../resources/xyt-pager/style.css" rel="stylesheet" />
+	<script src="../resources/xyt-pager/pager.js"></script>
+	<script src="../resources/js-plug/My97DatePicker/WdatePicker.js"></script>
+	<script src="../resources/js-plug/sys.js"></script>
+<script type="text/javascript" src="./js/main.js"></script>
+    <script type="text/javascript">
+        $.ajaxSetup ({cache: false });
+        $(document).ready(function () { });
+        function showPrompt(options) {
+            $.prompt(options);
+        }
+        
+    </script>
+</head>
+<body style="overflow-y:hidden;overflow-x:hidden">
+
+	<!-- BEGIN 内容区-->
+	<div class="main-big">
+		<div class="main-b-box">
+			<!-- BEGIN table组件-->
+			<div class="main-b-contentbox">
+				<div class="contentbox-title-nav">
+					<div class="navigations">
+						<ul>
+							<li><a href="#">首页</a> <span>&gt;</span></li>
+							<li><a href="#">房间管理</a> <span>&gt;</span></li>
+							<li><a href="#">房间查询</a></li>
+						</ul>
+					</div>
+				</div>
+				<form id="entityroomSearchForm" name="entityroomSearchForm">
+					<div class="contentbox-body">
+
+						<div class="table-query">
+							<div class="table-group query-inline-num3">
+								<input type="text" id="creater" name="creater" value=""
+									placeholder="订单ID"  onchange="changecreater()" onkeydown="changecreater()"/> 
+								<input type="text" id="sessionId"
+									name="sessionId" value="" placeholder="实体ID" onchange="changesessionId()" onkeydown="changesessionId()"/> 
+							</div>
+							<div class="table-group query-inline-num3">
+								<input type="text" name="startDt" id="startDt" value="" placeholder="创建起始时间" readonly="readonly"  onclick="WdatePicker({maxDate:'#F{$dp.$D(\'endDt\')}',dateFmt:'yyyy-MM-dd'});changestartDt()"  onchange="changestartDt()" onkeydown="changestartDt()"/>
+                            	<input type="text" name="endDt" id="endDt" value="" placeholder="创建截止时间" readonly="readonly"  onclick="WdatePicker({minDate:'#F{$dp.$D(\'startDt\')}',dateFmt:'yyyy-MM-dd'});changeendDt()" onchange="changeendDt()" onkeydown="changeendDt()" />
+								<button type="button" onclick="searchOrderLog()">查询</button>
+								<button type="button"  class="perm" id="resetButton" >重置</button>
+								<button type="button"  class="perm" id="addButton" onclick="addRoom()">添加酒店</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="table-scrollable">
+						<div class="table-wrapper">
+							<table class="table table-striped table-hover table-bordered">
+								<thead>
+									<tr>
+										<th width="20%">房间号</th>
+										<th width="20%">房间名称</th>
+										<th width="20%">所在酒店</th>
+									</tr>
+								</thead>
+								<tbody id="searchEntityRoomContent">
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="page-scrollable">
+						<div class="table-pages">
+							<div id="xyt-pager"></div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			
+			 initXytItem();
+			$("#resetButton").click(function(){
+	        	$("#entitySearchForm")[0].reset();
+	        	$('[placeholder]').focusout();
+	        	//Start =====搜索框初始为灰
+	        	changesel_input_style();
+	        	//End =======搜索框初始为灰
+	        	searchOrderLog();
+		    });
+			createPager("searchEntityRoomLog", "xyt-pager", 10);
+			searchEntityRoomLog();
+			placeholder();
+			//Start =====搜索框初始为灰
+			changesel_input_style(); 
+			//End =======搜索框初始为灰
+		});
+		
+		function changecreater(){
+        	$("#creater").css({"color":"black"});
+        }
+		
+		function changesessionId(){
+        	$("#sessionId").css({"color":"black"});
+        }
+		
+		function changestartDt(){
+		  	$("#startDt").css({"color":"black"});
+		  	if (document.getElementById("startDt").value=='登录起始时间'){
+				document.getElementById("startDt").value='';
+		    }
+		}
+		
+		function changeendDt(){
+		  	$("#endDt").css({"color":"black"});
+		  	if (document.getElementById("endDt").value=='登录截止时间'){
+				document.getElementById("endDt").value='';
+		    }
+		}
+
+		function searchEntityRoomLog() {
+			
+			topLoading();
+			$('[placeholder]').focusin();			 
+			$.post(getContextPath() + "/room/search", $(
+				"[name='entityroomSearchForm']").serialize(), function(
+					resultBean, status, request) {
+				topLoaded();
+				$('[placeholder]').focusout();
+				//if (!handleAjaxRequest(resultBean, status, request)) return;
+				$("#searchEntityContent").html("");
+				var beanList = resultBean.resultData;
+				var bean = "";
+				for (var i = 0; i < beanList.length; i++) {
+					bean = beanList[i];
+					console.log("bean -->"+bean.entityId);
+					appendTrToTBody(i, "searchEntityRoomContent", new Array(
+						"<span title='" + bean.roomNo + "'>" + bean.roomNo + "</span>", 
+						"<span title='" + bean.roomName + "'>" + bean.roomName + "</span>", 
+						"<span title='" + bean.entity.entityName + "'>" + bean.entity.entityName + "</span>"
+						));
+				}
+				setAjaxPagerValues("searchEntityRoomLog",
+					resultBean.resultData.dataSize, 
+					resultBean.resultData.pageSize,
+					resultBean.resultData.currentPage);
+			}, 'json');
+		}
+	</script>
+
+</body>
+</html>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.msy.mapper.PlayRecordMapper">
+  <resultMap id="BaseResultMap" type="com.msy.model.PlayRecord">
+    <id column="order_room_id" jdbcType="VARCHAR" property="orderRoomId" />
+    <result column="room_id" jdbcType="VARCHAR" property="roomId" />
+    <result column="order_id" jdbcType="VARCHAR" property="orderId" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="active_time" jdbcType="TIMESTAMP" property="activeTime" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+
+    order_room_id, room_id, order_id, created_time, active_time
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_play_record
+    where order_room_id = #{orderRoomId,jdbcType=VARCHAR}
+  
+  </select>
+    
+ <select id="selectByRoomId" parameterType="java.lang.String" resultMap="PlayRecResultMap">
+    select *
+    from t_play_record  
+    where room_id = #{roomId,jdbcType=VARCHAR}
+  </select>
+  
+  
+  <resultMap type="com.msy.model.PlayRecord" id="PlayRecResultMap">  
+    <id column="order_room_id" jdbcType="VARCHAR" property="orderRoomId" />
+	<result column="room_id" jdbcType="VARCHAR" property="roomId" />
+	<result column="order_id" jdbcType="VARCHAR" property="orderId" />
+	<result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+	<result column="active_time" jdbcType="TIMESTAMP" property="activeTime" />
+    <association property="order" column="order_id" javaType="com.msy.model.Order" select="com.msy.mapper.OrderMapper.selectByPrimaryKey">  
+    </association>  
+   </resultMap>
+  
+  <select id="selectByRoomIdAndActiveTime" resultMap="BaseResultMap">
+    <![CDATA[select DISTINCT *
+    from t_play_record  
+    where  room_id= #{arg0} AND  #{arg1} < active_time AND 
+    created_time=(select max(created_time) from t_play_record where room_id= #{arg0})]]>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_play_record
+    where order_room_id = #{orderRoomId,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert" parameterType="com.msy.model.PlayRecord">
+
+    insert into t_play_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderRoomId != null">
+        order_room_id,
+      </if>
+      <if test="roomId != null">
+        room_id,
+      </if>
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="createdTime != null">
+        created_time,
+      </if>
+      <if test="activeTime != null">
+        active_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderRoomId != null">
+        #{orderRoomId,jdbcType=VARCHAR},
+      </if>
+      <if test="roomId != null">
+        #{roomId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null">
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null">
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="activeTime != null">
+        #{activeTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.msy.model.PlayRecord">
+
+    update t_play_record
+    <set>
+      <if test="roomId != null">
+        room_id = #{roomId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null">
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null">
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="activeTime != null">
+        active_time = #{activeTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where order_room_id = #{orderRoomId,jdbcType=VARCHAR}
+  </update>
+ 
+</mapper>

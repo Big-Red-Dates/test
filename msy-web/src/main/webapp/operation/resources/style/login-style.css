@@ -1,0 +1,68 @@
+/*
+ | --------------------------------------------------------
+ | File        : login-style.css
+ | Project     : Html
+ | Version     : 1.1 |
+ | Description : Login stylesheet.
+ | Author      : Liu FuChang
+ | Author URL  : 
+ | Plugin URL  : 
+ | Copyright (C) 2011-2012  Liu FuChang
+ | --------------------------------------------------------
+ */
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video { margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline; }
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block; }
+body { line-height: 1; font-family: ËÎÌו,'Microsoft YaHei'; font-size: 13px; }
+ol, ul { list-style: none; }
+blockquote, q { quotes: none; }
+    blockquote:before, blockquote:after, q:before, q:after { content: ''; content: none; }
+table { border-collapse: collapse; border-spacing: 0; }
+
+a { text-decoration: none; }
+
+.xyt-minW { min-width: 990px; }
+.xyt-minH { }
+.fn-left { float: left; }
+.fn-right { float: right; }
+.fn-clear { clear: both; }
+.fn-pos-relative { position: relative; }
+.fn-pos-absolute { position: absolute; }
+
+.margin_20 { margin-top: 19px; }
+.margin_30 { margin-top: 30px; }
+
+
+.xyt-m-header { height: 86px; min-width: 990px; }
+    .xyt-m-header .m-header-inner { position: relative; z-index: 3; width: 980px; margin: 0 auto; }
+.m-header-inner .m-header-fontnum { height: 86px; }
+.m-header-inner .m-header-img h1 { top: 30px; width: 489px; }
+.m-header-inner .m-header-img .m-header-i-font { padding-top: 10px; }
+.m-header-inner .m-header-img h1 a { display: block; }
+.xyt-m-header .m-header-inner .m-header-fontnum { font-size: 22px; color: #737474; }
+    .xyt-m-header .m-header-inner .m-header-fontnum h5 { top: 46px; right: 10px; width: 261px; }
+
+
+.xyt-m-content { min-height: 354px; height: 354px; min-width: 990px; background: url(../images/login/main-bg.gif) repeat-x; }
+    .xyt-m-content .m-content-bg { height: 354px; background: url(../images/login/main-login.jpg) no-repeat center; }
+.m-content-inner { height: 354px; width: 980px; margin: 0 auto; }
+    .m-content-inner .content-inner-slogan { width: 595px; height: 354px; }
+.content-inner-slogan .content-font { color: #6c6c6c; font-size: 14px; width: 439px; top: 95px; left: 15px; }
+    .content-inner-slogan .content-font p { line-height: 21px; }
+.m-content-inner .content-inner-form { height: 354px; width: 290px; }
+    .m-content-inner .content-inner-form .content-form { width: 247px; height: 267px; margin: 25px auto; }
+.content-form .form-bg { background: url(../images/login/form.gif) no-repeat; }
+.content-form .form-title { height: 24px; width: 247px; background-position:0 -57px; }
+.content-form .form-username, .content-form .form-password { height: 43px; width: 247px; }
+.form-username input, .form-password input { border: 0px; height: 36px; width: 200px; margin: 2px; line-height: 31px; }
+.content-form em { width: 35px; height: 36px; display: block; }
+.form-username ._em1 { background-position:0 -80px; }
+.form-password ._em2 { background-position:0 -117px; }
+.form-p { height: 24px; width: 240px; }
+.form-but .login_button { height: 38px; width: 245px; border: none; background-position:0 -165px; }
+
+.xyt-m-footer { min-width: 990px; margin-top: 56px; }
+.footer { width: 980px; margin: 0 auto 15px auto; text-align: center; }
+    .footer span { margin: 0px 10px 0px 10px; line-height: 23px; }
+        .footer span img { vertical-align: text-top; }
+    .footer a { color: #919292; margin: 0px 5px 0px 5px; }

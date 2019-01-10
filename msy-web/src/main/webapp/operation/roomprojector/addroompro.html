@@ -1,0 +1,146 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title></title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<link href="../resources/style/page.form.css" rel="stylesheet" />
+<link href="../resources/style/jqueryValidate/jquery.validate.css"
+	rel="stylesheet" />
+<script src="../resources/js-plug/jquery.validate/jquery.validate.js"></script>
+<script
+	src="../resources/js-plug/jquery.validate/jquery.validate.method.js"></script>
+<script src="../resources/js-plug/My97DatePicker/WdatePicker.js"></script>
+<script src="../resources/js-plug/md5.js"></script>
+<!-- 树型选择器样式 -->
+<link href="../resources/xyt-select/style.css" rel="stylesheet" />
+<!-- 树型选择器 -->
+<script src="../resources/js-plug/jquery.jstree.js"></script>
+<script src="../resources/xyt-select/select.js"></script>
+<style type="text/css">
+.txt {
+	width: 161px;
+}
+
+.selectDiv ul {
+	width: 178px;
+}
+
+.orgOnly {
+	display: none;
+}
+
+label.orgError {
+	color: #FF0000;
+	font-size: 12px;
+	font-weight: bold;
+	margin-left: 10px;
+	padding-bottom: 2px;
+}
+</style>
+
+</head>
+<body>
+	<div class="middle-main">
+		<div class="msg"></div>
+		<div class="listtab">
+			<form id="addroomFROM" method="post">
+				<input id="codeM" name="code" type="hidden">
+				<div class="form-blog">
+					<div>
+						<div class="row">
+							<label class="labeltext xing">设备id：</label> <input type="text"
+								name="projectId" maxlength="20" id="projectId"
+								class="middleinput"/>
+						</div>
+						<div class="row">
+							<label class="labeltext xing">所在酒店：</label> <select
+								name="inentity" class="input w50" id="inentity">
+								<option value="0">请选择所在酒店</option>
+							</select>
+						</div>
+						<div class="row">
+							<label class="labeltext xing">绑定房间号：</label> <select
+								name="roomno" class="input w50" id="roomno">
+							</select>
+						</div>
+					</div>
+					<div class="form-save">
+						<span class="but">
+							<button type="button" id="saveButton">
+								<div class="but-left"></div>
+								<div class="but-center">绑定</div>
+								<div class="but-right"></div>
+							</button>
+						</span> <span class="but">
+							<button type="button" class="but-close">
+								<div class="but-left"></div>
+								<div class="but-center">取消</div>
+								<div class="but-right"></div>
+							</button>
+						</span>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(
+				function() {
+					$("#saveButton").click(function(){
+						addroomprojectorLog();
+				    });
+					selEntityLog();
+					selroomlog();
+						function selEntityLog(){
+							var proId = localStorage.getItem("projectorId");
+							$("#projectId").val(proId);
+							$.post(getContextPath() + "/room/selentity", function(
+									resultBean, status, request) {
+								//topLoaded();
+								var beanList = resultBean.resultData;
+								for (var i = 0; i < beanList.length; i++) {
+									bean = beanList[i];
+									appendTrToTBody(i, "inentity", new Array(
+										"<option value=\'"+bean.entityId+"\'>"+bean.entityName+"</option>", 
+										));
+								}
+							}, 'json');
+						}
+					/* $("#addhotalFROM").validate(validateConfige); */
+				 		function addroomprojectorLog(){
+							$.post(getContextPath() + "/roomprojector/add", $(
+							"#addroomFROM").serialize(), function(
+							resultBean, status, request) {
+						//topLoaded();
+						if (resultBean.resultCode=="0000") {
+							alert(resultBean.resultMsg);
+							}else{
+							alert(resultBean.resultMsg);
+							}
+					}, 'json');
+					} 
+					function selroomlog(){
+						var roomno=document.getElementById("roomno");
+						var inentity = document.getElementById("inentity");
+						inentity.addEventListener("change", function(){
+								/* console.log(provSelect.value) */
+								var optionHTML = "";
+								var entityId = $("#inentity").val();
+								$.post(getContextPath() + "/roomprojector/searchroom",{id:entityId}, function(
+									resultBean, status, request) {
+								//topLoaded();
+								var beanList = resultBean.resultData;
+								for (var i = 0; i < beanList.length; i++) {
+									bean = beanList[i];
+									optionHTML = optionHTML +("<option value=\'"+bean.roomId+"\'>"+bean.roomNo+"</option>") 
+								}
+								roomno.innerHTML=optionHTML;
+							}, 'json');
+						});		
+						}
+				});
+	</script>
+</body>
+</html>

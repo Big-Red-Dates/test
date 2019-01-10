@@ -1,0 +1,176 @@
+.tab{
+	border: 1px solid #EEEAE9;
+	width: 95%;
+	margin: 0 auto;
+}
+.tab-hd{
+	line-height: 33px;
+	background-color: #F3F3F3;
+	padding-left: 5px;
+	border-bottom: 1px solid #EEEAE9;
+	overflow: hidden;
+	color: black;
+	font-weight: bold;
+	_zoom:1;
+}
+.tab-bd{
+	
+}
+.details{
+	/*padding-bottom: 15px;*/
+}
+.details .details-bt{
+	font-size: 12px;
+	display: block; 
+	padding: 13px 0px 14px 18px;
+}
+.green{
+	color: green;
+	text-decoration: none;
+}
+.shuang{
+	background-color: #f9f9f9;
+}
+.table{
+	font-size: 12px;
+	width: 100%;
+}
+.tablerel td{
+
+}
+.table tr{
+	line-height: 34px;
+	border-bottom: 1px solid #F2F2F2;
+}
+.table tr.imgtr{
+	height: 40px;
+	line-height: 40px;
+}
+.table tr.imgtr td{
+	text-align: center;
+	vertical-align: middle;
+}
+.table th{
+	width: 113px;
+	text-align: left;
+	color:black;
+	padding-left: 15px;
+	font-weight: normal;
+	vertical-align: top;
+}
+.table td{
+	width: 165px;
+	text-align: left;
+	vertical-align: top;
+}
+.double tr{
+	border-bottom: 0px;
+}
+.long{
+	width: 600px;
+}
+.news th,.news td{
+	width: 150px;
+	text-align: left;
+	color: black;
+	/* font-weight: bold; */
+	padding-left: 0px;
+}
+.news .te{
+	width: 180px;
+}
+.news th{
+	background-color: #F3F3F3;
+	font-weight: bold;
+}
+.biaoti{
+	float: left;
+}
+.anniu{
+	float: right;
+	padding-right: 5px;
+	text-decoration: underline;
+}
+.anniu a{
+	cursor: pointer;
+}
+.blue{
+	color: gray;
+	display: block;
+	width: 70px;
+	line-height: 16px;
+	font-weight: normal;
+}
+
+/*审核商家列表中的审核页面*/
+
+.neirong{
+	width: 197px;
+	height: 25px;
+	border: 1px solid #B1C0C7;
+}
+.reason{
+	width:197px;
+	border: 1px solid #B1C0C7;
+}
+.backreason{
+	padding-top: 10px;
+}
+.backreasontext{
+	position: relative;
+	top: -40px;
+}
+.tuihui{
+	top: 0px;
+}
+.reasonxing{
+	color:red;
+	font-weight: normal;
+	font-size: 17px;
+	position: relative;
+	top: 3px;
+}
+.editreasontext{
+	position: relative;
+	top: -57px;
+}
+.editreason{
+	position: relative;
+	top: 5px;
+}
+button{
+	border: 0;
+}
+.but-left{
+	float: left;
+	width: 6px;
+	height: 30px;
+	background:url(../images/news-img/but-left-bg.jpg) no-repeat;
+}
+.but-center{
+	float: left;
+	padding: 0px 10px;
+	height: 30px;
+	line-height: 30px;
+	color: white;
+	font-weight: bold;
+	background:url(../images/news-img/but-center-bg.jpg) repeat-x;
+}
+.but-right{
+	float: left;
+	width: 6px;
+	height: 30px;
+	background:url(../images/news-img/but-right-bg.jpg) no-repeat;
+}
+.shenhebut{
+	padding-left: 240px;
+	padding-top: 20px;
+}
+.xingtext{
+	background:url(../images/news-img/xing.jpg) no-repeat right center;
+}
+.xingth th{
+}
+.textsmall a:link,.textsmall a:visited{
+	color: rgb(3, 111, 3);
+}
